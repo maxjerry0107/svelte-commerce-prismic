@@ -1,0 +1,33 @@
+{
+  "id": "collection_slider",
+  "type": "SharedSlice",
+  "name": "CollectionSlider",
+  "description": "CollectionSlider",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": ""
+          }
+        },
+        "collection_handle": {
+          "type": "Text",
+          "config": {
+            "label": "Collection Handle",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

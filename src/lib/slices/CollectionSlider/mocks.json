@@ -1,0 +1,19 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"collection_handle": {
+				"__TYPE__": "FieldContent",
+				"value": "together",
+				"type": "Text"
+			},
+			"title": {
+				"__TYPE__": "FieldContent",
+				"value": "final",
+				"type": "Text"
+			}
+		},
+		"items": []
+	}
+]
