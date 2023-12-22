@@ -36,7 +36,7 @@
 		on:click={() => {
 			openSelect = !openSelect;
 		}}
-		class="flex w-full items-center justify-between rounded border border-black/30 px-4 py-2 text-sm dark:border-white/30"
+		class="flex w-full items-center justify-between rounded border border-black/30 px-4 py-2 text-sm "
 	>
 		<div>{active}</div>
 		<Icon src={ChevronDown} class="w-4 h-4" />
@@ -46,7 +46,7 @@
 			on:click={() => {
 				openSelect = false;
 			}}
-			class="absolute z-40 w-full rounded-b-md bg-white p-4 shadow-md dark:bg-black"
+			class="absolute z-40 w-full rounded-b-md bg-white p-4 shadow-md "
 		>
 			{#each list as item}
 				<FilterItem {item} />

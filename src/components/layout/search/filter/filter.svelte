@@ -9,7 +9,7 @@
 
 <nav>
 	{#if title}
-		<h3 class="hidden text-xs text-neutral-500 dark:text-neutral-400 md:block">
+		<h3 class="hidden text-xs text-neutral-500 md:block">
 			{title}
 		</h3>
 	{/if}

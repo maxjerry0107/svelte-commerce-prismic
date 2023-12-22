@@ -279,3 +279,10 @@ export type ShopifyProductsOperation = {
     sortKey?: string;
   };
 };
+
+
+export type VariantCombination = {
+  id: string;
+  availableForSale: boolean;
+  [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
+};

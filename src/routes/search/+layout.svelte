@@ -7,7 +7,7 @@
 </script>
 
 <div
-	class="mx-auto flex max-w-screen-2xl flex-col gap-8 px-4 pb-4 text-black dark:text-white md:flex-row"
+	class="mx-auto flex max-w-screen-2xl flex-col gap-8 px-4 pb-4 text-black md:flex-row"
 >
 	<div class="order-first w-full flex-none md:max-w-[125px]">
 		<Collections collections={data.collections} />
