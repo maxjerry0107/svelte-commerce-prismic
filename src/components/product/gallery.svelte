@@ -43,7 +43,9 @@
 </div>
 
 {#if images.length > 1}
-	<ul class="my-12 flex items-center justify-center gap-2 overflow-auto py-1 lg:mb-0">
+	<ul
+		class="my-12 flex items-center justify-center gap-2 overflow-x-auto overflow-y-hidden py-1 lg:mb-0"
+	>
 		{#each images as image, index (image)}
 			<!-- content here -->
 			<li class="h-20 w-20">
