@@ -33,7 +33,7 @@
 	aria-disabled={!isAvailableForSale}
 	disabled={!isAvailableForSale}
 	on:click={() => {
-		goto(optionUrl);
+		goto(optionUrl, { noScroll: true });
 	}}
 	title={`${option.name} ${value}${!isAvailableForSale ? ' (Out of Stock)' : ''}`}
 	class={clsx(
