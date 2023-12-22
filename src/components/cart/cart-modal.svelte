@@ -14,8 +14,12 @@
 	const openCart = () => dialog.open();
 	const closeCart = () => dialog.close();
 	export let cart: Cart | null = null;
+	let cartQuantity = cart?.totalQuantity;
 
-	$: cart?.totalQuantity && openCart();
+	$: if (cart?.totalQuantity !== cartQuantity) {
+		if (cartQuantity != undefined && !$dialog.expanded) openCart();
+		cartQuantity = cart?.totalQuantity;
+	}
 
 	type MerchandiseSearchParams = {
 		[key: string]: string;
