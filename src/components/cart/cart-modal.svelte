@@ -15,6 +15,8 @@
 	const closeCart = () => dialog.close();
 	export let cart: Cart | null = null;
 
+	$: cart?.totalQuantity && openCart();
+
 	type MerchandiseSearchParams = {
 		[key: string]: string;
 	};
@@ -34,7 +36,7 @@
 </script>
 
 <button aria-label="Open cart" on:click={openCart}>
-	<OpenCart />
+	<OpenCart quantity={cart?.totalQuantity} />
 </button>
 
 <Transition show={$dialog.expanded}>

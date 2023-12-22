@@ -1,47 +1,25 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { removeFromCart, updateCart } from '$lib/shopify';
 	import type { CartItem } from '$lib/shopify/types';
 	import clsx from 'clsx';
 	import { Icon, Minus, Plus } from 'svelte-hero-icons';
 	import LoadingDots from '../loading-dots.svelte';
+	import { editCartItemAction } from './action';
 
 	export let item: CartItem;
 	export let type: 'plus' | 'minus';
 
-	const cartId = $page.data.cartId;
 	let pending = false;
-	let message = '';
+	let message: string | undefined = '';
 
 	const onClick = async () => {
 		const lineId = item.id;
 		const variantId = item.merchandise.id;
 		const quantity = type === 'plus' ? item.quantity + 1 : item.quantity - 1;
-		if (!pending) {
-			if (!cartId) {
-				message = 'Missing cart ID';
-			}
-			try {
-				if (quantity === 0) {
-					pending = true;
-					await removeFromCart(cartId, [lineId]);
-					pending = false;
-					return;
-				}
 
-				pending = true;
-				await updateCart(cartId, [
-					{
-						id: lineId,
-						merchandiseId: variantId,
-						quantity
-					}
-				]);
-				pending = false;
-			} catch (e) {
-				message = 'Error updating item quantity';
-				pending = false;
-			}
+		if (!pending) {
+			pending = true;
+			message = await editCartItemAction({ lineId, variantId, quantity });
+			pending = false;
 		}
 	};
 </script>

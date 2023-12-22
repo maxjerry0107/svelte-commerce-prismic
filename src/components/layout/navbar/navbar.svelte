@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { cart, loadCart } from '$lib/stores';
 	import clsx from 'clsx';
-	import Cart from '../../cart/cart.svelte';
+	import { onMount } from 'svelte';
+	import CartModal from '../../cart/cart-modal.svelte';
 	import Logo from '../logo.svelte';
 	import MobileMenu from './mobile-menu.svelte';
 	import Search from './search.svelte';
 	const SITE_NAME = import.meta.env.VITE_SHOPIFY_STORE_NAME;
 	const menu = $page.data.headerMenu;
+	onMount(() => {
+		loadCart();
+	});
 </script>
 
 <nav class="relative flex items-center justify-between p-4 lg:px-6">
@@ -47,7 +52,7 @@
 			<Search />
 		</div>
 		<div class="flex justify-end md:w-1/3">
-			<Cart />
+			<CartModal cart={$cart} />
 		</div>
 	</div>
 </nav>

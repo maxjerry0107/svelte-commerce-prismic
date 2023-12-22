@@ -1,33 +1,20 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { removeFromCart } from '$lib/shopify';
 	import type { CartItem } from '$lib/shopify/types';
 	import clsx from 'clsx';
 	import { Icon, XMark } from 'svelte-hero-icons';
 	import LoadingDots from '../loading-dots.svelte';
+	import { deleteCartItemAction } from './action';
 
 	export let item: CartItem;
 
-	const cartId = $page.data.cartId;
 	let pending = false;
-	let message = '';
+	let message: string | undefined = '';
 
 	const onClick = async () => {
 		const itemId = item.id;
-
-		if (!cartId) {
-			message = 'Missing cart ID';
-			return;
-		}
-
-		try {
-			pending = true;
-			await removeFromCart(cartId, [itemId]);
-			pending = false;
-		} catch (e) {
-			message = 'Error removing item from cart';
-			pending = false;
-		}
+		pending = true;
+		message = await deleteCartItemAction({ itemId });
+		pending = false;
 	};
 </script>
 

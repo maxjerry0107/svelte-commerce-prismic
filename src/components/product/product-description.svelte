@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Product } from '$lib/shopify/types';
+	import AddToCart from '../cart/add-to-cart.svelte';
 	import Price from '../price.svelte';
 	import Prose from '../prose.svelte';
 	import VariantSelector from './variant-selector.svelte';
@@ -26,5 +27,5 @@
 		/>
 	{/if}
 
-	<!-- <AddToCart variants={product.variants} availableForSale={product.availableForSale} /> -->
+	<AddToCart variants={product.variants} availableForSale={product.availableForSale} />
 {/if}
