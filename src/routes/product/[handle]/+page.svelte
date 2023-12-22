@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Image } from '$lib/shopify/types.js';
+	import { MetaTags } from 'svelte-meta-tags';
 	import Gallery from '../../../components/product/gallery.svelte';
 	import ProductDescription from '../../../components/product/product-description.svelte';
 
@@ -26,7 +27,26 @@
 			src: image.url,
 			altText: image.altText
 		})) || [];
+
+	const { url, width, height, altText: alt } = product?.featuredImage || {};
 </script>
+
+<MetaTags
+	title={product?.seo.title || product?.title}
+	description={product?.seo.description || product?.description}
+	openGraph={url
+		? {
+				images: [
+					{
+						url,
+						width,
+						height,
+						alt
+					}
+				]
+			}
+		: undefined}
+/>
 
 {@html '<script type="application/ld+json">' + JSON.stringify(productJsonLd) + '</script>'}
 
