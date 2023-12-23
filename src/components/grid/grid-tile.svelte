@@ -28,7 +28,7 @@
 		<img
 			{alt}
 			class={clsx(
-				'relative h-full w-full object-contain',
+				'relative h-full w-full object-cover',
 				{
 					'transition duration-300 ease-in-out group-hover:scale-105': isInteractive
 				},
