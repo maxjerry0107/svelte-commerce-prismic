@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { CartItem } from '$lib/shopify/types';
+	import { editCartItemAction } from '$lib/stores';
 	import clsx from 'clsx';
 	import { Icon, Minus, Plus } from 'svelte-hero-icons';
 	import LoadingDots from '../loading-dots.svelte';
-	import { editCartItemAction } from './action';
 
 	export let item: CartItem;
 	export let type: 'plus' | 'minus';

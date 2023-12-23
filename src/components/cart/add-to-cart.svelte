@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import type { ProductVariant } from '$lib/shopify/types';
+	import { addToCartAction } from '$lib/stores';
 	import clsx from 'clsx';
 	import { Icon, Plus } from 'svelte-hero-icons';
 	import LoadingDots from '../loading-dots.svelte';
-	import { addToCartAction } from './action';
 
 	export let availableForSale: boolean;
 	export let variants: ProductVariant[];

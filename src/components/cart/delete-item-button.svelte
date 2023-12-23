@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { CartItem } from '$lib/shopify/types';
+	import { deleteCartItemAction } from '$lib/stores';
 	import clsx from 'clsx';
 	import { Icon, XMark } from 'svelte-hero-icons';
 	import LoadingDots from '../loading-dots.svelte';
-	import { deleteCartItemAction } from './action';
 
 	export let item: CartItem;
 
