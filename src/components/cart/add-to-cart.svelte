@@ -1,27 +1,17 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import type { ProductVariant } from '$lib/shopify/types';
 	import { addToCartAction } from '$lib/stores';
 	import clsx from 'clsx';
 	import { Icon, Plus } from 'svelte-hero-icons';
 	import LoadingDots from '../loading-dots.svelte';
 
 	export let availableForSale: boolean;
-	export let variants: ProductVariant[];
 	let pending = false;
 	const buttonClasses =
 		'relative flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white';
 	const disabledClasses = 'cursor-not-allowed opacity-60 hover:opacity-60';
 	let message: string | undefined = '';
 
-	$: searchParams = $page.url.searchParams;
-	$: defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
-	$: variant = variants.find((variant: ProductVariant) =>
-		variant.selectedOptions.every(
-			(option) => option.value === searchParams.get(option.name.toLowerCase())
-		)
-	);
-	$: selectedVariantId = variant?.id || defaultVariantId;
+	export let selectedVariantId: string | undefined;
 
 	const addToCartClicked = async () => {
 		if (!selectedVariantId) {
