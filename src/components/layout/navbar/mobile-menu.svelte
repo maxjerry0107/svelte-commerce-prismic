@@ -73,15 +73,6 @@
 									</a>
 								</li>
 							{/each}
-							<li>
-								<a
-									href="/aboutus"
-									data-sveltekit-prefetch
-									class="py-2 text-xl text-black transition-colors hover:text-neutral-500"
-								>
-									About us
-								</a>
-							</li>
 						</ul>
 					{/if}
 				</div>
