@@ -48,7 +48,7 @@
 				{#if collection?.products && collection?.products.length > 0}
 					<ul class="mt-4">
 						<Carousel let:loaded {particlesToShow} particlesToScroll={1}>
-							{#each collection?.products as product, imageIndex (product)}
+							{#each collection?.products.slice(0, 6) as product, imageIndex (product)}
 								<GridItem className="animate-fadeIn p-2">
 									<a
 										class="relative inline-block h-full w-full"

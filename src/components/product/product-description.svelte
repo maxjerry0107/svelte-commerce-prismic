@@ -8,7 +8,7 @@
 
 	export let product: Product | undefined;
 
-	const variants = product?.variants;
+	$: variants = product?.variants;
 	$: searchParams = $page.url.searchParams;
 	$: defaultVariantId = variants?.length === 1 ? variants[0]?.id : undefined;
 	$: selectedVariant = variants?.find((variant: ProductVariant) =>

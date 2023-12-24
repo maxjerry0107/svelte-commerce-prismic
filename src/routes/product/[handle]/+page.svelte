@@ -3,15 +3,17 @@
 	import { MetaTags } from 'svelte-meta-tags';
 	import Gallery from '../../../components/product/gallery.svelte';
 	import ProductDescription from '../../../components/product/product-description.svelte';
+	import RelatedProducts from '../../../components/product/related-products.svelte';
 
 	export let data;
-	const product = data.product;
-	const productJsonLd = {
+	$: product = data.product;
+	$: relatedProducts = data.relatedProducts;
+	$: productJsonLd = {
 		'@context': 'https://schema.org',
 		'@type': 'Product',
 		name: product?.title,
 		description: product?.description,
-		image: product?.featuredImage.url,
+		image: product?.featuredImage?.url,
 		offers: {
 			'@type': 'AggregateOffer',
 			availability: product?.availableForSale
@@ -22,12 +24,11 @@
 			lowPrice: product?.priceRange.minVariantPrice.amount
 		}
 	};
-	const images =
+	$: images =
 		product?.images.map((image: Image) => ({
 			src: image.url,
 			altText: image.altText
 		})) || [];
-
 	const { url, width, height, altText: alt } = product?.featuredImage || {};
 </script>
 
@@ -62,5 +63,5 @@
 			<ProductDescription {product} />
 		</div>
 	</div>
-	<!-- <RelatedProducts id={product.id} /> -->
+	<RelatedProducts {relatedProducts} />
 </div>

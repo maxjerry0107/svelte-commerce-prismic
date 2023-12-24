@@ -5,13 +5,12 @@
 	export let options: ProductOption[];
 	export let variants: ProductVariant[];
 
-	const hasNoOptionsOrJustOneOption =
+	$: hasNoOptionsOrJustOneOption =
 		!options.length || (options.length === 1 && options[0]?.values.length === 1);
 
-	const combinations = variants.map((variant) => ({
+	$: combinations = variants.map((variant) => ({
 		id: variant.id,
 		availableForSale: variant.availableForSale,
-		// Adds key / value pairs for each variant (ie. "color": "Black" and "size": 'M").
 		...variant.selectedOptions.reduce(
 			(accumulator, option) => ({ ...accumulator, [option.name.toLowerCase()]: option.value }),
 			{}
