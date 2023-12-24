@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { Image } from '$lib/shopify/types.js';
+	import { components } from '$lib/slices';
+	import { SliceZone } from '@prismicio/svelte';
 	import { MetaTags } from 'svelte-meta-tags';
 	import Gallery from '../../../components/product/gallery.svelte';
 	import ProductDescription from '../../../components/product/product-description.svelte';
@@ -30,6 +32,7 @@
 			altText: image.altText
 		})) || [];
 	const { url, width, height, altText: alt } = product?.featuredImage || {};
+	$: prismicData = data.prismicData;
 </script>
 
 <MetaTags
@@ -62,6 +65,9 @@
 		<div class="basis-full lg:basis-2/6">
 			<ProductDescription {product} />
 		</div>
+	</div>
+	<div class="my-5">
+		<SliceZone slices={prismicData?.data?.slices} {components} />
 	</div>
 	<RelatedProducts {relatedProducts} />
 </div>
