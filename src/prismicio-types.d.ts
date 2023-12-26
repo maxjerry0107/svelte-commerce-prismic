@@ -4,7 +4,10 @@ import type * as prismic from '@prismicio/client';
 
 type Simplify<T> = { [KeyType in keyof T]: T[KeyType] };
 
-type CollectionPageDocumentDataSlicesSlice = ImageDescriptionSlice;
+type CollectionPageDocumentDataSlicesSlice =
+	| NonPrismicContentSlice
+	| HeroImageWithTextSlice
+	| ImageDescriptionSlice;
 
 /**
  * Content for Collection Page documents
@@ -257,6 +260,91 @@ export type CollectionSliderSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *HeroImageWithText → Primary*
+ */
+export interface HeroImageWithTextSliceDefaultPrimary {
+	/**
+	 * Image field in *HeroImageWithText → Primary*
+	 *
+	 * - **Field Type**: Image
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: hero_image_with_text.primary.image
+	 * - **Documentation**: https://prismic.io/docs/field#image
+	 */
+	image: prismic.ImageField<never>;
+
+	/**
+	 * Sub Heading field in *HeroImageWithText → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: hero_image_with_text.primary.sub_heading
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	sub_heading: prismic.KeyTextField;
+
+	/**
+	 * Heading field in *HeroImageWithText → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: hero_image_with_text.primary.heading
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	heading: prismic.KeyTextField;
+
+	/**
+	 * CTA Title field in *HeroImageWithText → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: hero_image_with_text.primary.cta_title
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	cta_title: prismic.KeyTextField;
+
+	/**
+	 * CTA Link field in *HeroImageWithText → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: hero_image_with_text.primary.cta_link
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	cta_link: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for HeroImageWithText Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type HeroImageWithTextSliceDefault = prismic.SharedSliceVariation<
+	'default',
+	Simplify<HeroImageWithTextSliceDefaultPrimary>,
+	never
+>;
+
+/**
+ * Slice variation for *HeroImageWithText*
+ */
+type HeroImageWithTextSliceVariation = HeroImageWithTextSliceDefault;
+
+/**
+ * HeroImageWithText Shared Slice
+ *
+ * - **API ID**: `hero_image_with_text`
+ * - **Description**: HeroImageWithText
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type HeroImageWithTextSlice = prismic.SharedSlice<
+	'hero_image_with_text',
+	HeroImageWithTextSliceVariation
+>;
+
+/**
  * Primary content in *HeroSlider → Items*
  */
 export interface HeroSliderSliceDefaultItem {
@@ -434,6 +522,36 @@ export type ImageDescriptionSlice = prismic.SharedSlice<
 	ImageDescriptionSliceVariation
 >;
 
+/**
+ * Default variation for NonPrismicContent Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type NonPrismicContentSliceDefault = prismic.SharedSliceVariation<
+	'default',
+	Record<string, never>,
+	never
+>;
+
+/**
+ * Slice variation for *NonPrismicContent*
+ */
+type NonPrismicContentSliceVariation = NonPrismicContentSliceDefault;
+
+/**
+ * NonPrismicContent Shared Slice
+ *
+ * - **API ID**: `non_prismic_content`
+ * - **Description**: NonPrismicContent
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type NonPrismicContentSlice = prismic.SharedSlice<
+	'non_prismic_content',
+	NonPrismicContentSliceVariation
+>;
+
 declare module '@prismicio/client' {
 	interface CreateClient {
 		(
@@ -458,6 +576,10 @@ declare module '@prismicio/client' {
 			CollectionSliderSliceDefaultPrimary,
 			CollectionSliderSliceVariation,
 			CollectionSliderSliceDefault,
+			HeroImageWithTextSlice,
+			HeroImageWithTextSliceDefaultPrimary,
+			HeroImageWithTextSliceVariation,
+			HeroImageWithTextSliceDefault,
 			HeroSliderSlice,
 			HeroSliderSliceDefaultItem,
 			HeroSliderSliceVariation,
@@ -465,7 +587,10 @@ declare module '@prismicio/client' {
 			ImageDescriptionSlice,
 			ImageDescriptionSliceDefaultPrimary,
 			ImageDescriptionSliceVariation,
-			ImageDescriptionSliceDefault
+			ImageDescriptionSliceDefault,
+			NonPrismicContentSlice,
+			NonPrismicContentSliceVariation,
+			NonPrismicContentSliceDefault
 		};
 	}
 }

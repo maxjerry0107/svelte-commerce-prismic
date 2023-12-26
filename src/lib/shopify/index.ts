@@ -1,18 +1,16 @@
-import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from '$lib/constants';
+import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT } from '$lib/constants';
 import { isShopifyError } from '$lib/type-guards';
 import { ensureStartsWith } from '$lib/utils';
-import {
-  addToCartMutation,
-  createCartMutation,
-  editCartItemsMutation,
-  removeFromCartMutation
-} from './mutations/cart';
-import { getCartQuery } from './queries/cart';
+import type { Checkout } from '../../types/shopify';
+import { associateCustomerWithCheckoutMutation, checkoutCreateMutation, checkoutLineItemAddMutation, checkoutLineItemRemoveMutation, checkoutLineItemUpdateMutation, disassociateCustomerWithCheckoutMutation } from './mutations/checkout';
+import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerCreateMutation } from './mutations/customer';
+import { getCheckoutQuery } from './queries/checkout';
 import {
   getCollectionProductsQuery,
   getCollectionQuery,
   getCollectionsQuery
 } from './queries/collection';
+import { getCustomerQuery } from './queries/customer';
 import { getMenuQuery } from './queries/menu';
 import { getPageQuery, getPagesQuery } from './queries/page';
 import {
@@ -25,19 +23,28 @@ import type {
   Collection,
   CollectionWithProducts,
   Connection,
+  Customer,
+  CustomerAccessToken,
+  CustomerCreateInput,
+  CustomerLoginInput,
   Image,
   Menu,
   Page,
   Product,
-  ShopifyAddToCartOperation,
-  ShopifyCart,
-  ShopifyCartOperation,
+  ShopifyAddToCheckoutOperation,
+  ShopifyAssociateCustomerWithCheckoutOperation,
   ShopifyCollection,
   ShopifyCollectionOperation,
   ShopifyCollectionProductsOperation,
   ShopifyCollectionWithProductsOperation,
   ShopifyCollectionsOperation,
-  ShopifyCreateCartOperation,
+  ShopifyCreateCheckoutOperation,
+  ShopifyCustomerCreateOperation,
+  ShopifyCustomerLoginOperation,
+  ShopifyCustomerLogoutOperation,
+  ShopifyDisassociateCustomerWithCheckoutOperation,
+  ShopifyGetCheckoutOperation,
+  ShopifyGetCustomerOperation,
   ShopifyMenuOperation,
   ShopifyPageOperation,
   ShopifyPagesOperation,
@@ -45,8 +52,8 @@ import type {
   ShopifyProductOperation,
   ShopifyProductRecommendationsOperation,
   ShopifyProductsOperation,
-  ShopifyRemoveFromCartOperation,
-  ShopifyUpdateCartOperation
+  ShopifyRemoveFromCheckoutOperation,
+  ShopifyUpdateCheckoutOperation
 } from './types';
 
 
@@ -119,19 +126,6 @@ const removeEdgesAndNodes = (array: Connection<any>) => {
   return array.edges.map((edge) => edge?.node);
 };
 
-const reshapeCart = (cart: ShopifyCart): Cart => {
-  if (!cart.cost?.totalTaxAmount) {
-    cart.cost.totalTaxAmount = {
-      amount: '0.0',
-      currencyCode: 'USD'
-    };
-  }
-
-  return {
-    ...cart,
-    lines: removeEdgesAndNodes(cart.lines)
-  };
-};
 
 const reshapeCollection = (collection: ShopifyCollection): Collection | undefined => {
   if (!collection) {
@@ -214,79 +208,10 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
   return reshapedProducts;
 };
 
-export async function createCart(): Promise<Cart> {
-  const res = await shopifyFetch<ShopifyCreateCartOperation>({
-    query: createCartMutation,
-    cache: 'no-store'
-  });
-
-  return reshapeCart(res.body.data.cartCreate.cart);
-}
-
-export async function addToCart(
-  cartId: string,
-  lines: { merchandiseId: string; quantity: number }[]
-): Promise<Cart> {
-  const res = await shopifyFetch<ShopifyAddToCartOperation>({
-    query: addToCartMutation,
-    variables: {
-      cartId,
-      lines
-    },
-    cache: 'no-store'
-  });
-  return reshapeCart(res.body.data.cartLinesAdd.cart);
-}
-
-export async function removeFromCart(cartId: string, lineIds: string[]): Promise<Cart> {
-  const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
-    query: removeFromCartMutation,
-    variables: {
-      cartId,
-      lineIds
-    },
-    cache: 'no-store'
-  });
-
-  return reshapeCart(res.body.data.cartLinesRemove.cart);
-}
-
-export async function updateCart(
-  cartId: string,
-  lines: { id: string; merchandiseId: string; quantity: number }[]
-): Promise<Cart> {
-  const res = await shopifyFetch<ShopifyUpdateCartOperation>({
-    query: editCartItemsMutation,
-    variables: {
-      cartId,
-      lines
-    },
-    cache: 'no-store'
-  });
-
-  return reshapeCart(res.body.data.cartLinesUpdate.cart);
-}
-
-export async function getCart(cartId: string): Promise<Cart | undefined> {
-  const res = await shopifyFetch<ShopifyCartOperation>({
-    query: getCartQuery,
-    variables: { cartId },
-    tags: [TAGS.cart],
-    cache: 'no-store'
-  });
-
-  // Old carts becomes `null` when you checkout.
-  if (!res.body.data.cart) {
-    return undefined;
-  }
-
-  return reshapeCart(res.body.data.cart);
-}
 
 export async function getCollection(handle: string): Promise<Collection | undefined> {
   const res = await shopifyFetch<ShopifyCollectionOperation>({
     query: getCollectionQuery,
-    tags: [TAGS.collections],
     variables: {
       handle
     }
@@ -307,7 +232,6 @@ export async function getCollectionWithProducts({
 }): Promise<CollectionWithProducts | undefined> {
   const res = await shopifyFetch<ShopifyCollectionWithProductsOperation>({
     query: getCollectionProductsQuery,
-    tags: [TAGS.collections, TAGS.products],
     variables: {
       handle: handle,
       reverse,
@@ -331,7 +255,6 @@ export async function getCollectionProducts({
 }): Promise<Product[]> {
   const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
     query: getCollectionProductsQuery,
-    tags: [TAGS.collections, TAGS.products],
     variables: {
       handle: collection,
       reverse,
@@ -340,7 +263,6 @@ export async function getCollectionProducts({
   });
 
   if (!res.body.data.collection) {
-    console.log(`No collection found for \`${collection}\``);
     return [];
   }
 
@@ -350,7 +272,6 @@ export async function getCollectionProducts({
 export async function getCollections(): Promise<Collection[]> {
   const res = await shopifyFetch<ShopifyCollectionsOperation>({
     query: getCollectionsQuery,
-    tags: [TAGS.collections]
   });
   const shopifyCollections = removeEdgesAndNodes(res.body?.data?.collections);
   const collections = [
@@ -378,7 +299,6 @@ export async function getCollections(): Promise<Collection[]> {
 export async function getMenu(handle: string): Promise<Menu[]> {
   const res = await shopifyFetch<ShopifyMenuOperation>({
     query: getMenuQuery,
-    tags: [TAGS.collections],
     variables: {
       handle
     }
@@ -412,7 +332,6 @@ export async function getPages(): Promise<Page[]> {
 export async function getProduct(handle: string): Promise<Product | undefined> {
   const res = await shopifyFetch<ShopifyProductOperation>({
     query: getProductQuery,
-    tags: [TAGS.products],
     variables: {
       handle
     }
@@ -424,7 +343,6 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 export async function getProductRecommendations(productId: string): Promise<Product[]> {
   const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
     query: getProductRecommendationsQuery,
-    tags: [TAGS.products],
     variables: {
       productId
     }
@@ -444,7 +362,6 @@ export async function getProducts({
 }): Promise<Product[]> {
   const res = await shopifyFetch<ShopifyProductsOperation>({
     query: getProductsQuery,
-    tags: [TAGS.products],
     variables: {
       query,
       reverse,
@@ -453,4 +370,176 @@ export async function getProducts({
   });
 
   return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+}
+
+export async function customerCreate({ firstName, lastName, email, password, acceptsMarketing }: CustomerCreateInput): Promise<Customer> {
+  const res = await shopifyFetch<ShopifyCustomerCreateOperation>({
+    query: customerCreateMutation,
+    variables: {
+      input: {
+        firstName,
+        lastName,
+        email,
+        password,
+        acceptsMarketing,
+      },
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerCreate.customer;
+}
+
+export async function customerLogin({ email, password }: CustomerLoginInput): Promise<CustomerAccessToken> {
+  const res = await shopifyFetch<ShopifyCustomerLoginOperation>({
+    query: customerAccessTokenCreateMutation,
+    variables: {
+      input: {
+        email,
+        password,
+      },
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerAccessTokenCreate.customerAccessToken;
+}
+
+export async function customerLogout({ accessToken }: { accessToken: string }): Promise<string> {
+  const res = await shopifyFetch<ShopifyCustomerLogoutOperation>({
+    query: customerAccessTokenDeleteMutation,
+    variables: {
+      accessToken
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerAccessTokenDelete.deletedAccessToken;
+}
+
+export async function getCustomer({ accessToken }: { accessToken: string }): Promise<Customer> {
+  const res = await shopifyFetch<ShopifyGetCustomerOperation>({
+    query: getCustomerQuery,
+    variables: {
+      accessToken
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customer;
+}
+
+
+
+
+
+
+const normalizeCheckoutToCart = (checkout: Checkout): Cart => {
+  const lineItems = removeEdgesAndNodes(checkout.lineItems);
+  const totalQuantity = lineItems
+    .map((item: any) => item.quantity)
+    .reduce((x, y) => x + y, 0);
+  return {
+    id: checkout.id,
+    email: checkout.email,
+    cost: {
+      subtotalAmount: checkout.subtotalPriceV2,
+      totalAmount: checkout.totalPriceV2,
+      totalTaxAmount: checkout.totalTaxV2
+    },
+    totalQuantity: totalQuantity,
+    lines: lineItems,
+    checkoutUrl: checkout.webUrl
+  }
+}
+
+
+export async function getCheckout(checkoutId: string): Promise<Cart | undefined> {
+  const res = await shopifyFetch<ShopifyGetCheckoutOperation>({
+    query: getCheckoutQuery,
+    variables: { checkoutId },
+    cache: 'no-store'
+  });
+  if (!res.body.data.node) {
+    return undefined;
+  }
+  return normalizeCheckoutToCart(res.body.data.node);
+}
+
+
+export async function createCheckout(): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyCreateCheckoutOperation>({
+    query: checkoutCreateMutation,
+    cache: 'no-store'
+  });
+  return normalizeCheckoutToCart(res.body.data.checkoutCreate.checkout);
+}
+
+
+export async function addItemsToCheckout(
+  checkoutId: string,
+  lineItems: { variantId: string; quantity: number }[]
+): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyAddToCheckoutOperation>({
+    query: checkoutLineItemAddMutation,
+    variables: {
+      checkoutId,
+      lineItems
+    },
+    cache: 'no-store'
+  });
+  return normalizeCheckoutToCart(res.body.data.checkoutLineItemsAdd.checkout);
+}
+
+export async function removeItemsFromCheckout(
+  checkoutId: string,
+  lineItemIds: string[]
+): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyRemoveFromCheckoutOperation>({
+    query: checkoutLineItemRemoveMutation,
+    variables: {
+      checkoutId,
+      lineItemIds
+    },
+    cache: 'no-store'
+  });
+  return normalizeCheckoutToCart(res.body.data.checkoutLineItemsRemove.checkout);
+}
+
+
+export async function updateItemsCheckout(
+  checkoutId: string,
+  lineItems: { id: string; quantity: number }[]
+): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyUpdateCheckoutOperation>({
+    query: checkoutLineItemUpdateMutation,
+    variables: {
+      checkoutId,
+      lineItems
+    },
+    cache: 'no-store'
+  });
+
+  return normalizeCheckoutToCart(res.body.data.checkoutLineItemsUpdate.checkout);
+}
+
+
+export async function associateCustomerWithCheckout({ accessToken, checkoutId }: { accessToken: string, checkoutId: string }): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyAssociateCustomerWithCheckoutOperation>({
+    query: associateCustomerWithCheckoutMutation,
+    variables: {
+      accessToken,
+      checkoutId,
+    },
+    cache: 'no-store'
+  });
+  console.log(res.body.data.checkoutCustomerAssociateV2)
+  return normalizeCheckoutToCart(res.body.data.checkoutCustomerAssociateV2.checkout);
+}
+
+export async function disassociateCustomerWithCheckout({ checkoutId }: { checkoutId: string }): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyDisassociateCustomerWithCheckoutOperation>({
+    query: disassociateCustomerWithCheckoutMutation,
+    variables: {
+      checkoutId
+    },
+    cache: 'no-store'
+  });
+  return normalizeCheckoutToCart(res.body.data.checkoutCustomerDisassociateV2.checkout);
 }

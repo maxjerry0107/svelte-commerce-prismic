@@ -1,13 +1,13 @@
 <script>
+	import Collections from '$lib/components/layout/search/collections.svelte';
+	import Filter from '$lib/components/layout/search/filter/filter.svelte';
 	import { sorting } from '$lib/constants';
 
-	import Collections from '../../components/layout/search/collections.svelte';
-	import Filter from '../../components/layout/search/filter/filter.svelte';
 	export let data;
 </script>
 
 <div
-	class="mx-auto flex max-w-screen-2xl flex-col gap-8 px-4 pb-4 text-black md:flex-row"
+	class="mx-auto flex max-w-screen-2xl flex-col gap-y-2 gap-x-8 px-4 pb-4 text-black md:flex-row"
 >
 	<div class="order-first w-full flex-none md:max-w-[125px]">
 		<Collections collections={data.collections} />

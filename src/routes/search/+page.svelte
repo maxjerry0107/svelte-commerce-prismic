@@ -1,7 +1,6 @@
 <script lang="ts">
+	import ProductGridItems from '$lib/components/layout/product-grid-items.svelte';
 	import { MetaTags } from 'svelte-meta-tags';
-	import Grid from '../../components/grid/grid.svelte';
-	import ProductGridItems from '../../components/layout/product-grid-items.svelte';
 
 	export let data;
 	$: products = data.products;
@@ -22,7 +21,5 @@
 {/if}
 
 {#if products.length > 0}
-	<Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-		<ProductGridItems {products} />
-	</Grid>
+	<ProductGridItems {products} />
 {/if}

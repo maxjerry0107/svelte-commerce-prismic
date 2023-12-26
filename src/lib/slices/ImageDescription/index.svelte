@@ -11,7 +11,7 @@
 	data-slice-type={slice.slice_type}
 	data-slice-variation={slice.variation}
 >
-	<div class={clsx('flex md:h-96 flex-col-reverse', direction)}>
+	<div class={clsx('flex md:h-[450px] flex-col-reverse', direction)}>
 		<div class="md:w-1/2 h-full flex flex-col gap-y-3 justify-center p-8">
 			{#if slice.primary.title}
 				<h2 class="text-2xl">{slice.primary.title}</h2>

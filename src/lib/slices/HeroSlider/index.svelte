@@ -13,15 +13,15 @@
 	{#if browser}
 		<Carousel let:loaded autoplayDuration={10000} pauseOnFocus arrows={false}>
 			{#each slice.items as item, imageIndex (item)}
-				<div class="h-[500px] relative">
+				<div class="h-[600px] relative">
 					{#if loaded.includes(imageIndex)}
 						<div
 							class="w-full h-full object-cover bg-cover bg-center"
 							style="background-image: url('{item.hero_image.url}');"
 						/>
-						<div class="absolute left-0 bottom-0 p-4 right-0">
+						<div class="absolute left-0 bottom-0 p-6 right-0">
 							<div
-								class="w-96 max-w-full flex flex-col p-4 gap-y-2 backdrop-blur bg-white/20 rounded-md"
+								class="w-96 max-w-full flex flex-col p-4 gap-y-5 backdrop-blur bg-white/20 rounded-md"
 							>
 								{#if item.hero_title}
 									<h2 class="text-2xl">{item.hero_title}</h2>

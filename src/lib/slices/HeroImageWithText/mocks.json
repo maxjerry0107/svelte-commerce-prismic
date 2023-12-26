@@ -1,0 +1,50 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"image": {
+				"__TYPE__": "ImageContent",
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1589652717521-10c0d092dea9",
+					"width": 4752,
+					"height": 3168
+				},
+				"url": "https://images.unsplash.com/photo-1589652717521-10c0d092dea9",
+				"width": 4752,
+				"height": 3168,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"thumbnails": {}
+			},
+			"sub_heading": {
+				"__TYPE__": "FieldContent",
+				"value": "income",
+				"type": "Text"
+			},
+			"heading": {
+				"__TYPE__": "FieldContent",
+				"value": "wherever",
+				"type": "Text"
+			},
+			"cta_title": {
+				"__TYPE__": "FieldContent",
+				"value": "son",
+				"type": "Text"
+			},
+			"cta_link": {
+				"__TYPE__": "FieldContent",
+				"value": "melted",
+				"type": "Text"
+			}
+		},
+		"items": []
+	}
+]

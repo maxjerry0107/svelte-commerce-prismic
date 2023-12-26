@@ -1,11 +1,10 @@
 <script lang="ts">
+	import MySliceZone from '$lib/components/my-slice-zone.svelte';
+	import Gallery from '$lib/components/product/gallery.svelte';
+	import ProductDescription from '$lib/components/product/product-description.svelte';
+	import RelatedProducts from '$lib/components/product/related-products.svelte';
 	import type { Image } from '$lib/shopify/types.js';
-	import { components } from '$lib/slices';
-	import { SliceZone } from '@prismicio/svelte';
 	import { MetaTags } from 'svelte-meta-tags';
-	import Gallery from '../../../components/product/gallery.svelte';
-	import ProductDescription from '../../../components/product/product-description.svelte';
-	import RelatedProducts from '../../../components/product/related-products.svelte';
 
 	export let data;
 	$: product = data.product;
@@ -67,7 +66,7 @@
 		</div>
 	</div>
 	<div class="my-5">
-		<SliceZone slices={prismicData?.data?.slices} {components} />
+		<MySliceZone slices={prismicData?.data?.slices} />
 	</div>
 	<RelatedProducts {relatedProducts} />
 </div>

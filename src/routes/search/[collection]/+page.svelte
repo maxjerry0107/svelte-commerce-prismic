@@ -1,11 +1,11 @@
 <script lang="ts">
+	import ProductGridItems from '$lib/components/layout/product-grid-items.svelte';
+	import MySliceZone from '$lib/components/my-slice-zone.svelte';
 	import { MetaTags } from 'svelte-meta-tags';
-	import Grid from '../../../components/grid/grid.svelte';
-	import ProductGridItems from '../../../components/layout/product-grid-items.svelte';
 
 	export let data;
-	$: products = data.products;
 	$: collection = data.collection;
+	$: slices = data.prismicData?.data?.slices;
 </script>
 
 <MetaTags
@@ -15,10 +15,10 @@
 		`${collection?.title} products`}
 />
 
-{#if products.length === 0}
+{#if collection?.products.length === 0}
 	<p class="py-3 text-lg">{`No products found in this collection`}</p>
 {:else}
-	<Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-		<ProductGridItems {products} />
-	</Grid>
+	<MySliceZone {slices}>
+		<ProductGridItems products={collection?.products} />
+	</MySliceZone>
 {/if}

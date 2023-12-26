@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import GridItem from '$lib/components/grid/grid-item.svelte';
+	import GridTile from '$lib/components/grid/grid-tile.svelte';
 	import { getCollectionWithProducts } from '$lib/shopify';
 	import type { Content } from '@prismicio/client';
-	import { onMount } from 'svelte';
 	import Carousel from 'svelte-carousel';
-	import GridItem from '../../../components/grid/grid-item.svelte';
-	import GridTile from '../../../components/grid/grid-tile.svelte';
 
 	export let slice: Content.CollectionSliderSlice;
 
@@ -14,18 +13,14 @@
 
 	let collectionPromise = getCollectionWithProducts({ handle });
 	let particlesToShow = 4;
-	onMount(() => {
-		const handleResize = () => {
-			const width = window.innerWidth;
-			if (width > 1200) particlesToShow = 4;
-			else if (width > 768) particlesToShow = 3;
-			else if (width > 430) particlesToShow = 2;
-			else particlesToShow = 1;
-		};
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	});
+	let innerWidth: number;
+	$: if (innerWidth > 1200) particlesToShow = 4;
+	else if (innerWidth > 768) particlesToShow = 3;
+	else if (innerWidth > 430) particlesToShow = 2;
+	else particlesToShow = 1;
 </script>
+
+<svelte:window bind:innerWidth />
 
 <section
 	class="slice-section"

@@ -1,3 +1,5 @@
+import type { Checkout, CheckoutLineItem, MoneyV2 } from "../../types/shopify";
+
 export type Maybe<T> = T | null;
 
 export type Connection<T> = {
@@ -6,27 +8,6 @@ export type Connection<T> = {
 
 export type Edge<T> = {
   node: T;
-};
-
-export type Cart = Omit<ShopifyCart, 'lines'> & {
-  lines: CartItem[];
-};
-
-export type CartItem = {
-  id: string;
-  quantity: number;
-  cost: {
-    totalAmount: Money;
-  };
-  merchandise: {
-    id: string;
-    title: string;
-    selectedOptions: {
-      name: string;
-      value: string;
-    }[];
-    product: Product;
-  };
 };
 
 export type Collection = ShopifyCollection & {
@@ -91,18 +72,6 @@ export type SEO = {
   description: string;
 };
 
-export type ShopifyCart = {
-  id: string;
-  checkoutUrl: string;
-  cost: {
-    subtotalAmount: Money;
-    totalAmount: Money;
-    totalTaxAmount: Money;
-  };
-  lines: Connection<CartItem>;
-  totalQuantity: number;
-};
-
 export type ShopifyCollection = {
   handle: string;
   title: string;
@@ -129,62 +98,6 @@ export type ShopifyProduct = {
   seo: SEO;
   tags: string[];
   updatedAt: string;
-};
-
-export type ShopifyCartOperation = {
-  data: {
-    cart: ShopifyCart;
-  };
-  variables: {
-    cartId: string;
-  };
-};
-
-export type ShopifyCreateCartOperation = {
-  data: { cartCreate: { cart: ShopifyCart } };
-};
-
-export type ShopifyAddToCartOperation = {
-  data: {
-    cartLinesAdd: {
-      cart: ShopifyCart;
-    };
-  };
-  variables: {
-    cartId: string;
-    lines: {
-      merchandiseId: string;
-      quantity: number;
-    }[];
-  };
-};
-
-export type ShopifyRemoveFromCartOperation = {
-  data: {
-    cartLinesRemove: {
-      cart: ShopifyCart;
-    };
-  };
-  variables: {
-    cartId: string;
-    lineIds: string[];
-  };
-};
-
-export type ShopifyUpdateCartOperation = {
-  data: {
-    cartLinesUpdate: {
-      cart: ShopifyCart;
-    };
-  };
-  variables: {
-    cartId: string;
-    lines: {
-      id: string;
-      merchandiseId: string;
-      quantity: number;
-    }[];
-  };
 };
 
 export type ShopifyCollectionOperation = {
@@ -285,4 +198,172 @@ export type VariantCombination = {
   id: string;
   availableForSale: boolean;
   [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
+};
+
+
+export type Customer = {
+  acceptsMarketing: boolean;
+  displayName: string;
+  email?: string;
+  firstName?: string;
+  id: string;
+  lastName?: string;
+  phone?: string;
+};
+
+export type CustomerCreateInput = {
+  firstName?: string;
+  lastName?: string;
+  email: string;
+  phone?: string;
+  password: string;
+  acceptsMarketing?: boolean;
+};
+
+export type CustomerLoginInput = {
+  email: string;
+  password: string;
+};
+
+export type ShopifyCustomerCreateOperation = {
+  data: {
+    customerCreate: {
+      customer: Customer;
+    }
+  };
+  variables: {
+    input: CustomerCreateInput;
+  };
+};
+
+export type ShopifyCustomerLoginOperation = {
+  data: {
+    customerAccessTokenCreate: {
+      customerAccessToken: CustomerAccessToken;
+    }
+  };
+  variables: {
+    input: CustomerLoginInput;
+  };
+};
+
+
+export type ShopifyCustomerLogoutOperation = {
+  data: {
+    customerAccessTokenDelete: {
+      deletedAccessToken: string;
+    }
+  };
+  variables: {
+    accessToken: string;
+  };
+};
+
+export type CustomerAccessToken = {
+  accessToken: string;
+  expiresAt: any;
+}
+
+
+export type ShopifyGetCustomerOperation = {
+  data: {
+    customer: Customer
+  };
+  variables: {
+    accessToken: string;
+  };
+};
+
+export type ShopifyAssociateCustomerWithCheckoutOperation = {
+  data: {
+    checkoutCustomerAssociateV2: {
+      checkout: Checkout;
+    }
+  };
+  variables: {
+    checkoutId: string;
+    accessToken: string;
+  };
+};
+
+export type ShopifyDisassociateCustomerWithCheckoutOperation = {
+  data: {
+    checkoutCustomerDisassociateV2: {
+      checkout: Checkout;
+    }
+  };
+  variables: {
+    checkoutId: string;
+  };
+};
+
+
+export type ShopifyGetCheckoutOperation = {
+  data: {
+    node: Checkout
+  };
+  variables: {
+    checkoutId: string;
+  };
+};
+
+
+export type ShopifyCreateCheckoutOperation = {
+  data: { checkoutCreate: { checkout: Checkout } };
+};
+
+
+export type ShopifyAddToCheckoutOperation = {
+  data: {
+    checkoutLineItemsAdd: {
+      checkout: Checkout;
+    };
+  };
+  variables: {
+    checkoutId: string;
+    lineItems: {
+      variantId: string;
+      quantity: number;
+    }[];
+  };
+};
+
+export type ShopifyRemoveFromCheckoutOperation = {
+  data: {
+    checkoutLineItemsRemove: {
+      checkout: Checkout;
+    };
+  };
+  variables: {
+    checkoutId: string;
+    lineItemIds: string[];
+  };
+};
+
+export type ShopifyUpdateCheckoutOperation = {
+  data: {
+    checkoutLineItemsUpdate: {
+      checkout: Checkout;
+    };
+  };
+  variables: {
+    checkoutId: string;
+    lineItems: {
+      id: string;
+      quantity: number;
+    }[];
+  };
+};
+
+export type Cart = {
+  id: string;
+  email?: string;
+  cost: {
+    subtotalAmount: MoneyV2;
+    totalAmount: MoneyV2;
+    totalTaxAmount: MoneyV2;
+  };
+  lines: CheckoutLineItem[];
+  totalQuantity: number;
+  checkoutUrl: string;
 };

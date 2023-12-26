@@ -1,8 +1,7 @@
 <script>
-	import { SliceZone } from '@prismicio/svelte';
 	import { MetaTags } from 'svelte-meta-tags';
 
-	import { components } from '$lib/slices';
+	import MySliceZone from '$lib/components/my-slice-zone.svelte';
 
 	export let data;
 </script>
@@ -11,4 +10,4 @@
 	title="Demo Store"
 	description="High-performance ecommerce store built with Sveltekit, Prismic.io, and Shopify."
 />
-<SliceZone slices={data.page.data.slices} {components} />
+<MySliceZone slices={data.page.data.slices} />

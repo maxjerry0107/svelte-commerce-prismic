@@ -17,6 +17,12 @@
 				"fieldset": "Slice Zone",
 				"config": {
 					"choices": {
+						"non_prismic_content": {
+							"type": "SharedSlice"
+						},
+						"hero_image_with_text": {
+							"type": "SharedSlice"
+						},
 						"image_description": {
 							"type": "SharedSlice"
 						}

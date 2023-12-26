@@ -1,0 +1,18 @@
+{
+  "id": "non_prismic_content",
+  "type": "SharedSlice",
+  "name": "NonPrismicContent",
+  "description": "NonPrismicContent",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {},
+      "items": {}
+    }
+  ]
+}
