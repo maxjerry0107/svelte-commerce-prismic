@@ -4,9 +4,13 @@
 
 	export let slices: any | undefined = undefined;
 
+	$: topSlices = slices;
+	$: bottomSlices = [];
 	$: index = slices?.findIndex((slice: any) => slice.slice_type === 'non_prismic_content');
-	$: topSlices = slices?.slice(0, index);
-	$: bottomSlices = index && slices?.slice(index + 1);
+	$: if (index != -1) {
+		topSlices = slices?.slice(0, index);
+		bottomSlices = index && slices?.slice(index + 1);
+	}
 </script>
 
 {#if topSlices}
