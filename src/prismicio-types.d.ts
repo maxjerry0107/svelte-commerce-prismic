@@ -138,6 +138,62 @@ export type HomePageDocument<Lang extends string = string> = prismic.PrismicDocu
 	Lang
 >;
 
+/**
+ * Item in *Menu → Item*
+ */
+export interface MenuDocumentDataItemItem {
+	/**
+	 * Title field in *Menu → Item*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: menu.item[].title
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	title: prismic.KeyTextField;
+
+	/**
+	 * Path field in *Menu → Item*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: menu.item[].path
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	path: prismic.KeyTextField;
+}
+
+/**
+ * Content for Menu documents
+ */
+interface MenuDocumentData {
+	/**
+	 * Item field in *Menu*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: menu.item[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/field#group
+	 */
+	item: prismic.GroupField<Simplify<MenuDocumentDataItemItem>>;
+}
+
+/**
+ * Menu document from Prismic
+ *
+ * - **API ID**: `menu`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type MenuDocument<Lang extends string = string> = prismic.PrismicDocumentWithUID<
+	Simplify<MenuDocumentData>,
+	'menu',
+	Lang
+>;
+
 type ProductPageDocumentDataSlicesSlice = ImageDescriptionSlice;
 
 /**
@@ -202,7 +258,11 @@ export type ProductPageDocument<Lang extends string = string> = prismic.PrismicD
 	Lang
 >;
 
-export type AllDocumentTypes = CollectionPageDocument | HomePageDocument | ProductPageDocument;
+export type AllDocumentTypes =
+	| CollectionPageDocument
+	| HomePageDocument
+	| MenuDocument
+	| ProductPageDocument;
 
 /**
  * Primary content in *CollectionSlider → Primary*
@@ -568,6 +628,9 @@ declare module '@prismicio/client' {
 			HomePageDocument,
 			HomePageDocumentData,
 			HomePageDocumentDataSlicesSlice,
+			MenuDocument,
+			MenuDocumentData,
+			MenuDocumentDataItemItem,
 			ProductPageDocument,
 			ProductPageDocumentData,
 			ProductPageDocumentDataSlicesSlice,

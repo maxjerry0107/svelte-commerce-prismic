@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { getMenu } from '$lib/shopify';
+	import { page } from '$app/stores';
 	import Logo from '../logo.svelte';
 	import FooterMenuItem from './footer-menu-item.svelte';
 	const currentYear = new Date().getFullYear();
 	const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : '');
-	const skeleton = 'w-full h-4 animate-pulse rounded bg-neutral-200';
-	let menuPromise = getMenu(import.meta.env.VITE_STORE_FOOTER_MENU);
+	const menu = $page.data.footerMenu;
 	const SITE_NAME = import.meta.env.VITE_SHOPIFY_STORE_NAME;
 </script>
 
@@ -19,22 +18,13 @@
 				<span class="uppercase">{SITE_NAME}</span>
 			</a>
 		</div>
-		{#await menuPromise}
-			<div class="flex h-[188px] w-[200px] flex-col gap-2">
-				<div class={skeleton} />
-				<div class={skeleton} />
-				<div class={skeleton} />
-				<div class={skeleton} />
-			</div>
-		{:then menu}
-			<nav>
-				<ul>
-					{#each menu as item}
-						<FooterMenuItem {item} />
-					{/each}
-				</ul>
-			</nav>
-		{/await}
+		<nav>
+			<ul>
+				{#each menu as item}
+					<FooterMenuItem {item} />
+				{/each}
+			</ul>
+		</nav>
 	</div>
 	<div class="border-t border-neutral-200 py-6 text-sm">
 		<div

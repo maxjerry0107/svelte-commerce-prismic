@@ -1,9 +1,14 @@
-import { getMenu } from '$lib/shopify';
+import { createClient } from '$lib/prismicio.js';
 
-export async function load({ locals }) {
+export async function load({ locals, cookies, fetch }) {
 	const { customer } = locals;
+	const client = createClient({ fetch, cookies });
+
+	const headerMenu = (await client.getByUID("menu", "header-menu")).data.item;
+	const footerMenu = (await client.getByUID("menu", "footer-menu")).data.item;
 	return {
 		customer,
-		headerMenu: await getMenu(import.meta.env.VITE_STORE_HEADER_MENU)
+		headerMenu,
+		footerMenu
 	};
 }

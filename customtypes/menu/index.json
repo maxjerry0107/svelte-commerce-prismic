@@ -1,0 +1,39 @@
+{
+	"id": "menu",
+	"label": "Menu",
+	"format": "custom",
+	"repeatable": true,
+	"status": true,
+	"json": {
+		"Main": {
+			"uid": {
+				"config": {
+					"label": "UID"
+				},
+				"type": "UID"
+			},
+			"item": {
+				"type": "Group",
+				"config": {
+					"label": "Item",
+					"fields": {
+						"title": {
+							"type": "Text",
+							"config": {
+								"label": "Title",
+								"placeholder": ""
+							}
+						},
+						"path": {
+							"type": "Text",
+							"config": {
+								"label": "Path",
+								"placeholder": ""
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
