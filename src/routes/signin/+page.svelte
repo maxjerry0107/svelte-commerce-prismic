@@ -37,15 +37,15 @@
 
 <form method="post" on:submit={handleSubmit}>
 	<div
-		class="my-5 py-5 rounded-lg border border-neutral-200 bg-white container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2"
+		class="container mx-auto my-5 flex max-w-sm flex-1 flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-2 py-5"
 	>
-		<div class="px-6 py-8 text-black w-full">
-			<h1 class="mb-8 text-3xl text-center">Sign in</h1>
+		<div class="w-full px-6 py-8 text-black">
+			<h1 class="mb-8 text-center text-3xl">Sign in</h1>
 			<div class="mb-4">
 				<div class="mb-4">
 					<input
 						type="text"
-						class={clsx('block border border-grey-light w-full p-3 rounded', {
+						class={clsx('border-grey-light block w-full rounded border p-3', {
 							'border-red-400': $errors.email
 						})}
 						name="email"
@@ -62,7 +62,7 @@
 				<div class="mb-4">
 					<input
 						type="password"
-						class={clsx('block border border-grey-light w-full p-3 rounded', {
+						class={clsx('border-grey-light block w-full rounded border p-3', {
 							'border-red-400': $errors.password
 						})}
 						name="password"
@@ -78,10 +78,10 @@
 				<button
 					type="submit"
 					disabled={!$isValid}
-					class="h-12 flex items-center justify-center gap-x-2 hover:opacity-90 w-full text-center py-3 rounded bg-black text-white hover:bg-green-dark focus:outline-none my-1"
+					class="hover:bg-green-dark my-1 flex h-12 w-full items-center justify-center gap-x-2 rounded bg-black py-3 text-center text-white hover:opacity-90 focus:outline-none"
 				>
 					{#if $isSubmitting}
-						<LoadingDots className="bg-white" />
+						<LoadingDots class="bg-white" />
 					{:else}
 						Sign in
 					{/if}
@@ -90,7 +90,7 @@
 
 			<div class="text-grey-dark mb-6">
 				Don't have an account?
-				<a class="no-underline border-b border-blue text-blue" href="/signup"> Sign up </a>.
+				<a class="border-blue text-blue border-b no-underline" href="/signup"> Sign up </a>.
 			</div>
 		</div>
 	</div>

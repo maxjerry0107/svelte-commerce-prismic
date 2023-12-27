@@ -1,7 +1,8 @@
 <script lang="ts">
 	const dots = 'mx-[1px] inline-block h-1 w-1 animate-blink rounded-md';
 	import clsx from 'clsx';
-	export let className: string | null = null;
+	let className: string | null = null;
+	export { className as class };
 </script>
 
 <span class="mx-2 inline-flex items-center">

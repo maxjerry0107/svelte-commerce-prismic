@@ -29,7 +29,7 @@
 		)}
 	>
 		{#if $isSubmitting}
-			<LoadingDots className="bg-white" />
+			<LoadingDots class="bg-white" />
 		{:else}
 			<Icon src={XMark} class="hover:text-accent-3 mx-[1px] h-4 w-4 text-white " />
 		{/if}

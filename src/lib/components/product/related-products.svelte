@@ -21,7 +21,7 @@
 			<ul class="mt-4">
 				<Carousel let:loaded {particlesToShow} particlesToScroll={1}>
 					{#each relatedProducts as product, imageIndex (product)}
-						<GridItem className="animate-fadeIn p-2">
+						<GridItem class="animate-fadeIn p-2">
 							<a class="relative inline-block h-full w-full" href={`/product/${product.handle}`}>
 								{#if loaded.includes(imageIndex)}
 									<GridTile

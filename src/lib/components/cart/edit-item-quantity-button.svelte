@@ -33,7 +33,7 @@
 		)}
 	>
 		{#if $isSubmitting}
-			<LoadingDots className="bg-black " />
+			<LoadingDots class="bg-black " />
 		{:else if type === 'plus'}
 			<Icon src={Plus} class="h-4 w-4 " />
 		{:else}

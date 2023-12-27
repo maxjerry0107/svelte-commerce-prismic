@@ -126,7 +126,7 @@
 		class="hover:bg-green-dark my-1 flex h-12 w-full items-center justify-center gap-x-2 rounded bg-black py-3 text-center text-white hover:opacity-90 focus:outline-none"
 	>
 		{#if $isSubmitting}
-			<LoadingDots className="bg-white" />
+			<LoadingDots class="bg-white" />
 		{:else}
 			Update profile
 		{/if}

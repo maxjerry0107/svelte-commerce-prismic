@@ -31,7 +31,7 @@
 		class={clsx(buttonClasses, disabledClasses)}
 	>
 		<div class="absolute left-0 ml-4">
-			<Icon src={Plus} class="w-5 h-5" />
+			<Icon src={Plus} class="h-5 w-5" />
 		</div>
 		Add To Cart
 	</button>
@@ -48,7 +48,7 @@
 		>
 			<div class="absolute left-0 ml-4">
 				{#if $isSubmitting}
-					<LoadingDots className="mb-3 bg-white" />
+					<LoadingDots class="mb-3 bg-white" />
 				{:else}
 					<Icon src={Plus} class="h-5" />
 				{/if}

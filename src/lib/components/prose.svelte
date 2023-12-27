@@ -1,6 +1,7 @@
 <script lang="ts">
 	import clsx from 'clsx';
-	export let className: string = '';
+	let className: string = '';
+	export { className as class };
 	export let html: string = '';
 </script>
 

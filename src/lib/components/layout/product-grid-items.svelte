@@ -7,10 +7,10 @@
 	export let products: Product[] | undefined;
 </script>
 
-<Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+<Grid class="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 	{#if products}
 		{#each products as product}
-			<GridItem className="animate-fadeIn">
+			<GridItem class="animate-fadeIn">
 				<a class="relative inline-block h-full w-full" href={`/product/${product.handle}`}>
 					<GridTile
 						alt={product.title}

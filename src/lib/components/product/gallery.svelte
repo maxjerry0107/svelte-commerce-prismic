@@ -32,11 +32,11 @@
 				class="mx-auto flex h-11 items-center rounded-full border border-white bg-neutral-50/80 text-neutral-500 backdrop-blur dark:border-black dark:bg-neutral-900/80"
 			>
 				<button aria-label="Previous product image" on:click={goPrev} class={buttonClassName}>
-					<Icon src={ArrowLeft} class="w-5 h-5" />
+					<Icon src={ArrowLeft} class="h-5 w-5" />
 				</button>
 				<div class="mx-1 h-6 w-px bg-neutral-500"></div>
 				<button aria-label="Next product image" on:click={goNext} class={buttonClassName}>
-					<Icon src={ArrowRight} class="w-5 h-5" />
+					<Icon src={ArrowRight} class="h-5 w-5" />
 				</button>
 			</div>
 		</div>
@@ -60,7 +60,7 @@
 					<GridTile
 						alt={image.altText}
 						src={image.src}
-						className="w-20 h-20"
+						class="h-20 w-20"
 						active={index === imageIndex}
 					/>
 				</button>

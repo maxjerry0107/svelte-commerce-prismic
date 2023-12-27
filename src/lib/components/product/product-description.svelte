@@ -34,7 +34,7 @@
 
 	{#if product.descriptionHtml}
 		<Prose
-			className="mb-6 text-sm leading-tight dark:text-white/[60%]"
+			class="mb-6 text-sm leading-tight dark:text-white/[60%]"
 			html={product.descriptionHtml}
 		/>
 	{/if}

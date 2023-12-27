@@ -1,7 +1,8 @@
 <script lang="ts">
 	import clsx from 'clsx';
 	export let amount: string;
-	export let className: string | null = null;
+	let className: string | null = null;
+	export { className as class };
 	export let currencyCode: string = 'USD';
 	export let currencyCodeClassName: string | null = null;
 </script>

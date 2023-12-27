@@ -134,7 +134,7 @@
 										</a>
 										<div class="flex h-16 flex-col justify-between">
 											<Price
-												className="flex justify-end space-y-2 text-right text-sm"
+												class="flex justify-end space-y-2 text-right text-sm"
 												amount={(item.variant?.priceV2?.amount * item.quantity).toString()}
 												currencyCode={item.variant?.priceV2?.currencyCode}
 											/>
@@ -156,7 +156,7 @@
 							<div class="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1">
 								<p>Taxes</p>
 								<Price
-									className="text-right text-base text-black "
+									class="text-right text-base text-black "
 									amount={cart.cost.totalTaxAmount.amount}
 									currencyCode={cart.cost.totalTaxAmount.currencyCode}
 								/>
@@ -172,7 +172,7 @@
 							>
 								<p>Total</p>
 								<Price
-									className="text-right text-base text-black "
+									class="text-right text-base text-black "
 									amount={cart.cost.totalAmount.amount}
 									currencyCode={cart.cost.totalAmount.currencyCode}
 								/>
@@ -184,7 +184,7 @@
 								class="block w-full rounded-full bg-black p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
 							>
 								{#if $isSubmitting}
-									<LoadingDots className="bg-white" />
+									<LoadingDots class="bg-white" />
 								{:else}
 									Proceed to Checkout
 								{/if}

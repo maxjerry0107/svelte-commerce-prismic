@@ -19,7 +19,7 @@
 		<h3 class="mr-4 line-clamp-2 flex-grow pl-2 leading-none tracking-tight">{title}</h3>
 		{#if amount}
 			<Price
-				className="flex-none rounded-full bg-blue-600 p-2 text-white"
+				class="flex-none rounded-full bg-blue-600 p-2 text-white"
 				{amount}
 				{currencyCode}
 				currencyCodeClassName="hidden @[275px]/label:inline"

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { loadCart } from '$lib/actions/cart';
+	import Link from '$lib/components/link.svelte';
 	import { cart } from '$lib/stores';
-	import clsx from 'clsx';
 	import { onMount } from 'svelte';
-	import Account from '../../account/account.svelte';
+	import { Icon, User } from 'svelte-hero-icons';
 	import Cart from '../../cart/cart.svelte';
 	import Logo from '../logo.svelte';
 	import MobileMenu from './mobile-menu.svelte';
@@ -19,14 +19,14 @@
 <nav class="relative flex items-center justify-between p-4 lg:px-6">
 	<MobileMenu />
 	<div class="flex w-full items-center">
-		<div class="flex w-full md:w-1/3 items-start">
+		<div class="flex w-full items-start md:w-1/3">
 			<a
 				href="/"
 				data-sveltekit-prefetch
-				class="ml-2 *:mr-2 flex items-center justify-center md:w-auto lg:mr-6"
+				class="ml-2 flex items-center justify-center *:mr-2 md:w-auto lg:mr-6"
 			>
 				<Logo />
-				<div class="ml-2 flex-none text-sm font-medium uppercase block">
+				<div class="ml-2 block flex-none text-sm font-medium uppercase">
 					{SITE_NAME}
 				</div>
 			</a>
@@ -34,26 +34,25 @@
 		<div class="hidden justify-center md:flex md:w-1/3">
 			<Search />
 		</div>
-		<div class="flex justify-end md:w-1/3 gap-x-2">
-			<Account />
+		<div class="flex justify-end gap-x-2 md:w-1/3">
+			<a
+				class="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors"
+				aria-label="Account"
+				href="/account"
+			>
+				<Icon src={User} class="h-4 transition-all ease-in-out hover:scale-110" />
+			</a>
 			<Cart cart={$cart} />
 		</div>
 	</div>
 </nav>
-<nav class="hidden sm:flex items-center justify-center sm:mb-4">
+<nav class="hidden items-center justify-center sm:mb-4 sm:flex">
 	<div>
 		{#if menu.length > 0}
-			<ul class="gap-6 text-sm flex items-center">
+			<ul class="flex items-center gap-6 text-sm">
 				{#each menu as item}
 					<li>
-						<a
-							href={item.path}
-							class={clsx('text-neutral-500 underline-offset-4 hover:text-black hover:underline', {
-								'font-bold text-black': item.path === $page.url.pathname
-							})}
-						>
-							{item.title}
-						</a>
+						<Link {item} />
 					</li>
 				{/each}
 			</ul>

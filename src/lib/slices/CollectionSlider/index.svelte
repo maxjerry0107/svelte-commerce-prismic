@@ -30,11 +30,11 @@
 	<div class="px-4">
 		{#await collectionPromise}
 			<h3 class="text-2xl font-bold">{title}</h3>
-			<div class="grid grid-cols-4 gap-4 animate-pulse mt-4">
-				<div class="bg-slate-200 aspect-square"></div>
-				<div class="bg-slate-200 aspect-square"></div>
-				<div class="bg-slate-200 aspect-square"></div>
-				<div class="bg-slate-200 aspect-square"></div>
+			<div class="mt-4 grid animate-pulse grid-cols-4 gap-4">
+				<div class="aspect-square bg-slate-200"></div>
+				<div class="aspect-square bg-slate-200"></div>
+				<div class="aspect-square bg-slate-200"></div>
+				<div class="aspect-square bg-slate-200"></div>
 			</div>
 		{:then collection}
 			<h3 class="text-2xl font-bold">{title || collection?.title}</h3>
@@ -44,7 +44,7 @@
 					<ul class="mt-4">
 						<Carousel let:loaded {particlesToShow} particlesToScroll={1}>
 							{#each collection?.products.slice(0, 6) as product, imageIndex (product)}
-								<GridItem className="animate-fadeIn p-2">
+								<GridItem class="animate-fadeIn p-2">
 									<a
 										class="relative inline-block h-full w-full"
 										href={`/product/${product.handle}`}
