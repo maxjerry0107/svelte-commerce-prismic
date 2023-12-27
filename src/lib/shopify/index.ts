@@ -3,7 +3,7 @@ import { isShopifyError } from '$lib/type-guards';
 import { ensureStartsWith } from '$lib/utils';
 import type { Checkout } from '../../types/shopify';
 import { associateCustomerWithCheckoutMutation, checkoutCreateMutation, checkoutLineItemAddMutation, checkoutLineItemRemoveMutation, checkoutLineItemUpdateMutation, disassociateCustomerWithCheckoutMutation } from './mutations/checkout';
-import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerCreateMutation } from './mutations/customer';
+import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerCreateMutation, customerUpdateMutation } from './mutations/customer';
 import { getCheckoutQuery } from './queries/checkout';
 import {
   getCollectionProductsQuery,
@@ -42,6 +42,7 @@ import type {
   ShopifyCustomerCreateOperation,
   ShopifyCustomerLoginOperation,
   ShopifyCustomerLogoutOperation,
+  ShopifyCustomerUpdateOperation,
   ShopifyDisassociateCustomerWithCheckoutOperation,
   ShopifyGetCheckoutOperation,
   ShopifyGetCustomerOperation,
@@ -389,6 +390,19 @@ export async function customerCreate({ firstName, lastName, email, password, acc
   return res.body.data.customerCreate.customer;
 }
 
+
+export async function customerUpdate({ accessToken, customer }: { accessToken: string, customer: CustomerCreateInput }): Promise<Customer> {
+  const res = await shopifyFetch<ShopifyCustomerUpdateOperation>({
+    query: customerUpdateMutation,
+    variables: {
+      customer,
+      accessToken
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerUpdate.customer;
+}
+
 export async function customerLogin({ email, password }: CustomerLoginInput): Promise<CustomerAccessToken> {
   const res = await shopifyFetch<ShopifyCustomerLoginOperation>({
     query: customerAccessTokenCreateMutation,
@@ -529,7 +543,6 @@ export async function associateCustomerWithCheckout({ accessToken, checkoutId }:
     },
     cache: 'no-store'
   });
-  console.log(res.body.data.checkoutCustomerAssociateV2)
   return normalizeCheckoutToCart(res.body.data.checkoutCustomerAssociateV2.checkout);
 }
 
@@ -543,3 +556,4 @@ export async function disassociateCustomerWithCheckout({ checkoutId }: { checkou
   });
   return normalizeCheckoutToCart(res.body.data.checkoutCustomerDisassociateV2.checkout);
 }
+

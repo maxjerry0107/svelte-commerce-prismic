@@ -9,6 +9,12 @@ export const customerCreateMutation = /* GraphQL */ `
       }
       customer {
         id
+        firstName
+        lastName
+        displayName
+        email
+        phone
+        acceptsMarketing
       }
     }
   }
@@ -42,3 +48,24 @@ export const customerAccessTokenDeleteMutation = /* GraphQL */ `
     }
   }
 `
+
+export const customerUpdateMutation = /* GraphQL */ `
+  mutation customerUpdate($customer: CustomerUpdateInput!, $accessToken: String!) {
+    customerUpdate(customer: $customer, customerAccessToken: $accessToken) {
+      customerUserErrors {
+        code
+        field
+        message
+      }
+      customer {
+        id
+        firstName
+        lastName
+        displayName
+        email
+        phone
+        acceptsMarketing
+      }
+    }
+  }
+`;

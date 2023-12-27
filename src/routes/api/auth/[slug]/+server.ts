@@ -40,6 +40,7 @@ export async function POST({ request, cookies, params, locals }) {
         if (checkoutId)
           await disassociateCustomerWithCheckout({ checkoutId })
         cookies.delete('accessToken', { path: '/' })
+        locals.customer = undefined;
         status = "success";
         break;
       }

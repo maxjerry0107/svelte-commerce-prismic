@@ -214,9 +214,9 @@ export type Customer = {
 export type CustomerCreateInput = {
   firstName?: string;
   lastName?: string;
-  email: string;
-  phone?: string;
-  password: string;
+  email?: string;
+  phone?: string | null;
+  password?: string;
   acceptsMarketing?: boolean;
 };
 
@@ -233,6 +233,19 @@ export type ShopifyCustomerCreateOperation = {
   };
   variables: {
     input: CustomerCreateInput;
+  };
+};
+
+
+export type ShopifyCustomerUpdateOperation = {
+  data: {
+    customerUpdate: {
+      customer: Customer;
+    }
+  };
+  variables: {
+    customer: CustomerCreateInput;
+    accessToken: string;
   };
 };
 

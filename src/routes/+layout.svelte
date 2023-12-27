@@ -10,7 +10,7 @@
 	user.set(customer);
 </script>
 
-<div class="bg-neutral-50 text-black selection:bg-teal-300">
+<div class="bg-neutral-50 text-black">
 	<ProgressBar class="text-gray-600" />
 	<div class="container">
 		<Navbar />
