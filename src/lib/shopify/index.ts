@@ -1,9 +1,9 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT } from '$lib/constants';
 import { isShopifyError } from '$lib/type-guards';
 import { ensureStartsWith } from '$lib/utils';
-import type { Checkout } from '../../types/shopify';
+import type { Checkout, MailingAddress, MailingAddressInput } from '../../types/shopify';
 import { associateCustomerWithCheckoutMutation, checkoutCreateMutation, checkoutLineItemAddMutation, checkoutLineItemRemoveMutation, checkoutLineItemUpdateMutation, disassociateCustomerWithCheckoutMutation } from './mutations/checkout';
-import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerCreateMutation, customerUpdateMutation } from './mutations/customer';
+import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerAddressCreateMutation, customerCreateMutation, customerUpdateMutation } from './mutations/customer';
 import { getCheckoutQuery } from './queries/checkout';
 import {
   getCollectionProductsQuery,
@@ -39,6 +39,7 @@ import type {
   ShopifyCollectionWithProductsOperation,
   ShopifyCollectionsOperation,
   ShopifyCreateCheckoutOperation,
+  ShopifyCustomerAddressCreateOperation,
   ShopifyCustomerCreateOperation,
   ShopifyCustomerLoginOperation,
   ShopifyCustomerLogoutOperation,
@@ -557,3 +558,16 @@ export async function disassociateCustomerWithCheckout({ checkoutId }: { checkou
   return normalizeCheckoutToCart(res.body.data.checkoutCustomerDisassociateV2.checkout);
 }
 
+
+
+
+export async function customerAddressCreate({ accessToken, address }: { accessToken: string, address: MailingAddressInput }): Promise<MailingAddress> {
+  const res = await shopifyFetch<ShopifyCustomerAddressCreateOperation>({
+    query: customerAddressCreateMutation,
+    variables: {
+      accessToken, address
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerAddressCreate.customerAddress;
+}

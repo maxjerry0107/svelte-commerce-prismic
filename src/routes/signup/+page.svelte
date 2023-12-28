@@ -45,7 +45,7 @@
 			<div class="mb-4">
 				<input
 					type="text"
-					class={clsx('border-grey-light block w-full rounded border p-3', {
+					class={clsx('block w-full rounded border p-3', {
 						'border-red-400': $errors.firstName
 					})}
 					name="firstName"
@@ -61,7 +61,7 @@
 			<div class="mb-4">
 				<input
 					type="text"
-					class={clsx('border-grey-light block w-full rounded border p-3', {
+					class={clsx('block w-full rounded border p-3', {
 						'border-red-400': $errors.lastName
 					})}
 					name="lastName"
@@ -77,7 +77,7 @@
 			<div class="mb-4">
 				<input
 					type="text"
-					class={clsx('border-grey-light block w-full rounded border p-3', {
+					class={clsx('block w-full rounded border p-3', {
 						'border-red-400': $errors.email
 					})}
 					name="email"
@@ -94,7 +94,7 @@
 			<div class="mb-4">
 				<input
 					type="password"
-					class={clsx('border-grey-light block w-full rounded border p-3', {
+					class={clsx('block w-full rounded border p-3', {
 						'border-red-400': $errors.password
 					})}
 					name="password"
@@ -110,7 +110,7 @@
 			<div class="mb-4">
 				<input
 					type="password"
-					class={clsx('border-grey-light block w-full rounded border p-3', {
+					class={clsx('block w-full rounded border p-3', {
 						'border-red-400': $errors.confirmPassword
 					})}
 					name="confirmPassword"

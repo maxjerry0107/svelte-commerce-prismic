@@ -1,4 +1,4 @@
-import type { Checkout, CheckoutLineItem, MoneyV2 } from "../../types/shopify";
+import type { Checkout, CheckoutLineItem, MailingAddress, MailingAddressInput, MoneyV2 } from "../../types/shopify";
 
 export type Maybe<T> = T | null;
 
@@ -379,4 +379,17 @@ export type Cart = {
   lines: CheckoutLineItem[];
   totalQuantity: number;
   checkoutUrl: string;
+};
+
+
+export type ShopifyCustomerAddressCreateOperation = {
+  data: {
+    customerAddressCreate: {
+      customerAddress: MailingAddress;
+    }
+  };
+  variables: {
+    address: MailingAddressInput,
+    accessToken: string
+  };
 };

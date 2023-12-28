@@ -39,7 +39,7 @@
 		<div class="flex-1">
 			<input
 				type="text"
-				class={clsx('border-grey-light block w-full rounded border p-3', {
+				class={clsx('block w-full rounded border p-3', {
 					'border-red-400': $errors.firstName
 				})}
 				name="firstName"
@@ -55,7 +55,7 @@
 		<div class="flex-1">
 			<input
 				type="text"
-				class={clsx('border-grey-light block w-full rounded border p-3', {
+				class={clsx('block w-full rounded border p-3', {
 					'border-red-400': $errors.lastName
 				})}
 				name="lastName"
@@ -74,7 +74,7 @@
 			<input
 				type="text"
 				readonly
-				class="border-grey-light block w-full rounded border p-3"
+				class="block w-full rounded border p-3"
 				name="email"
 				placeholder="Email"
 				value={$user?.email}
@@ -83,7 +83,7 @@
 		<div class="flex-1">
 			<input
 				type="text"
-				class={clsx('border-grey-light block w-full rounded border p-3', {
+				class={clsx('block w-full rounded border p-3', {
 					'border-red-400': $errors.phone
 				})}
 				name="phone"

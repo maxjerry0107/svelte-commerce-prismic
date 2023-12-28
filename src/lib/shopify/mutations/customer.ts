@@ -69,3 +69,28 @@ export const customerUpdateMutation = /* GraphQL */ `
     }
   }
 `;
+
+export const customerAddressCreateMutation = /* GraphQL */  `
+  mutation customerAddressCreate($address: MailingAddressInput!, $accessToken: String!) {
+    customerAddressCreate(address: $address, customerAccessToken: $accessToken) {
+      customerAddress {
+        id
+        address1
+        address2
+        city
+        company
+        country
+        firstName
+        lastName
+        phone
+        province
+        zip
+      }
+      customerUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`
