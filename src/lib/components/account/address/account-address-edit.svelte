@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { customerAddressCreate } from '$lib/actions';
+	import { invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { customerAddressUpdate, customerDefaultAddressUpdate } from '$lib/actions';
 	import AutocompleteInput from '$lib/components/autocomplete-input.svelte';
 	import LoadingDots from '$lib/components/loading-dots.svelte';
+	import type { MailingAddress } from '$lib/shopify';
 	import { user } from '$lib/stores';
 	import clsx from 'clsx';
 	import countryData from 'country-region-data/data.json';
@@ -10,9 +13,8 @@
 	import { createSwitch } from 'svelte-headlessui';
 	import { Check, Icon, XMark } from 'svelte-hero-icons';
 	import * as yup from 'yup';
-	import type { MailingAddress } from '../../../../types/shopify';
 
-	export let address: MailingAddress | null = null;
+	export let selectedAddress: MailingAddress | null = null;
 
 	const countries = countryData.map((item) => {
 		return item.countryName;
@@ -26,21 +28,39 @@
 			return item.name;
 		});
 
-	$: sw = createSwitch({ label: 'Default address', checked: false });
+	$: sw = createSwitch({
+		label: 'Default address',
+		checked: false
+	});
 	const phoneRegExp = /(^$)|(^\+[1-9]\d{10,14}$)/;
 
+	$: if (selectedAddress) {
+		form.set({
+			firstName: selectedAddress?.firstName || $user?.firstName,
+			lastName: selectedAddress?.lastName || $user?.lastName,
+			company: selectedAddress?.company || '',
+			address1: selectedAddress?.address1 || '',
+			address2: selectedAddress?.address2 || '',
+			city: selectedAddress?.city || '',
+			country: selectedAddress?.country || '',
+			province: selectedAddress?.province || '',
+			zip: selectedAddress?.zip || '',
+			phone: selectedAddress?.phone || ''
+		});
+		sw.set({ checked: selectedAddress?.id === $page.data.addressData?.defaultId });
+	}
 	const { form, errors, isValid, isSubmitting, handleChange, handleSubmit } = createForm({
 		initialValues: {
-			firstName: address?.firstName || $user?.firstName,
-			lastName: address?.lastName || $user?.lastName,
-			company: address?.company || '',
-			address1: address?.address1 || '',
-			address2: address?.address2 || '',
-			city: address?.city || '',
-			country: address?.country || '',
-			province: address?.province || '',
-			zip: address?.zip || '',
-			phone: address?.phone || ''
+			firstName: $user?.firstName,
+			lastName: $user?.lastName,
+			company: '',
+			address1: '',
+			address2: '',
+			city: '',
+			country: '',
+			province: '',
+			zip: '',
+			phone: ''
 		},
 		validationSchema: yup.object().shape({
 			firstName: yup.string().required().label('First Name'),
@@ -55,34 +75,20 @@
 			phone: yup.string().matches(phoneRegExp, 'Valid format is +1234567890').label('Phone')
 		}),
 		onSubmit: async (values) => {
-			const {
-				firstName,
-				lastName,
-				company,
-				address1,
-				address2,
-				city,
-				country,
-				province,
-				zip,
-				phone
-			} = values;
-			if (address?.id) {
-				const res = await customerAddressCreate({
-					firstName,
-					lastName,
-					company,
-					address1,
-					address2,
-					city,
-					country,
-					province,
-					zip,
-					phone
-				});
-
-				if (res.status == 'success') toast.success('Address create success!');
-				else toast.error('Address create failed. Try again');
+			const { customerAddress, customerUserErrors } = await customerAddressUpdate({
+				address: { ...values },
+				addressId: selectedAddress?.id || ''
+			});
+			if (customerAddress) {
+				if ($sw.checked && $page.data.addressData?.defaultId != selectedAddress?.id) {
+					const res = await customerDefaultAddressUpdate({ addressId: customerAddress.id });
+					if (res.status == 'success') toast.success('Address save success!');
+					else toast.success('Address saved but set default failed');
+				} else toast.success('Address save success!');
+				selectedAddress = null;
+				invalidate('customer:addresses');
+			} else {
+				toast.error(customerUserErrors?.[0].message || 'Address save failed');
 			}
 		}
 	});
@@ -202,6 +208,7 @@
 			class={clsx('block w-full rounded border p-3', {
 				'border-red-400': $errors.country
 			})}
+			defaultValue={$form.country}
 			on:change={handleChange}
 			on:blur={handleChange}
 			bind:value={$form.country}
@@ -219,6 +226,7 @@
 			class={clsx('block w-full rounded border p-3', {
 				'border-red-400': $errors.province
 			})}
+			defaultValue={$form.province}
 			on:change={handleChange}
 			on:blur={handleChange}
 			bind:value={$form.province}
@@ -284,15 +292,24 @@
 		</button>
 		<input type="checkbox" value={$sw.checked} class="hidden" name="acceptMarketing" />
 	</div>
-	<button
-		type="submit"
-		disabled={!$isValid}
-		class="hover:bg-green-dark my-1 flex h-12 w-full items-center justify-center gap-x-2 rounded bg-black py-3 text-center text-white hover:opacity-90 focus:outline-none"
-	>
-		{#if $isSubmitting}
-			<LoadingDots class="bg-white" />
-		{:else}
-			{address ? 'Update address' : 'Add address'}
-		{/if}
-	</button>
+	<div class="flex flex-row gap-x-4">
+		<button
+			type="submit"
+			disabled={!$isValid}
+			class="hover:bg-green-dark my-1 flex h-12 w-full items-center justify-center gap-x-2 rounded bg-black py-3 text-center text-white hover:opacity-90 focus:outline-none"
+		>
+			{#if $isSubmitting}
+				<LoadingDots class="bg-white" />
+			{:else}
+				Save Address
+			{/if}
+		</button>
+		<button
+			on:click={() => {
+				selectedAddress = null;
+			}}
+			class="hover:bg-green-dark my-1 flex h-12 w-full items-center justify-center gap-x-2 rounded bg-black py-3 text-center text-white hover:opacity-90 focus:outline-none"
+			>Cancel</button
+		>
+	</div>
 </form>

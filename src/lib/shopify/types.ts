@@ -1,4 +1,4 @@
-import type { Checkout, CheckoutLineItem, MailingAddress, MailingAddressInput, MoneyV2 } from "../../types/shopify";
+import type { Checkout, CheckoutLineItem, Customer, CustomerAccessTokenCreateInput, CustomerAddressCreatePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerUpdateInput, MailingAddress, MailingAddressInput, MoneyV2 } from ".";
 
 export type Maybe<T> = T | null;
 
@@ -200,31 +200,6 @@ export type VariantCombination = {
   [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
 };
 
-
-export type Customer = {
-  acceptsMarketing: boolean;
-  displayName: string;
-  email?: string;
-  firstName?: string;
-  id: string;
-  lastName?: string;
-  phone?: string;
-};
-
-export type CustomerCreateInput = {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string | null;
-  password?: string;
-  acceptsMarketing?: boolean;
-};
-
-export type CustomerLoginInput = {
-  email: string;
-  password: string;
-};
-
 export type ShopifyCustomerCreateOperation = {
   data: {
     customerCreate: {
@@ -244,7 +219,7 @@ export type ShopifyCustomerUpdateOperation = {
     }
   };
   variables: {
-    customer: CustomerCreateInput;
+    customer: CustomerUpdateInput;
     accessToken: string;
   };
 };
@@ -256,7 +231,7 @@ export type ShopifyCustomerLoginOperation = {
     }
   };
   variables: {
-    input: CustomerLoginInput;
+    input: CustomerAccessTokenCreateInput;
   };
 };
 
@@ -384,12 +359,54 @@ export type Cart = {
 
 export type ShopifyCustomerAddressCreateOperation = {
   data: {
-    customerAddressCreate: {
-      customerAddress: MailingAddress;
-    }
+    customerAddressCreate: CustomerAddressCreatePayload
   };
   variables: {
     address: MailingAddressInput,
     accessToken: string
   };
 };
+
+
+export type ShopifyCustomerAddressUpdateOperation = {
+  data: {
+    customerAddressUpdate: CustomerAddressUpdatePayload
+  };
+  variables: {
+    address: MailingAddressInput,
+    accessToken: string,
+    addressId: string
+  };
+};
+
+
+export type ShopifyCustomerAddressDeleteOperation = {
+  data: {
+    customerAddressDelete: {
+      deletedCustomerAddressId: string;
+    }
+  };
+  variables: {
+    accessToken: string,
+    addressId: string
+  };
+};
+
+
+export type ShopifyCustomerDefaultAddressUpdateOperation = {
+  data: {
+    customerDefaultAddressUpdate: {
+      customer: Customer;
+    }
+  };
+  variables: {
+    accessToken: string,
+    addressId: string
+  };
+};
+
+
+export type CustomerAddressData = {
+  defaultId?: string;
+  addresses?: MailingAddress[]
+}

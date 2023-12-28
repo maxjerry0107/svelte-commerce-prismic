@@ -11,7 +11,7 @@
 
 <MetaTags title="Account" />
 
-<div class="container flex max-w-4xl flex-col px-6 py-8">
+<div class="container flex max-w-5xl flex-col px-6 py-8">
 	<button class="self-end" on:click={onLogOutClicked}>Log out</button>
 	<div class="flex flex-row gap-x-4 py-8">
 		<AccountSidebar />

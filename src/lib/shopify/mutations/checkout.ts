@@ -67,7 +67,6 @@ export const checkoutLineItemUpdateMutation = /* GraphQL */ `
       }
     }
   }
-
   ${checkoutFragment}
 `;
 

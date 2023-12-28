@@ -1,5 +1,6 @@
-import { customerAddressCreate, customerUpdate } from '$lib/shopify/index.js';
-import type { Customer } from '$lib/shopify/types.js';
+
+import type { Customer } from '$lib/shopify';
+import { customerAddressCreate, customerAddressDelete, customerAddressUpdate, customerDefaultAddressUpdate, customerUpdate } from '$lib/shopify/index.js';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request, cookies, params, locals }) {
@@ -22,16 +23,47 @@ export async function POST({ request, cookies, params, locals }) {
     case "create-address":
       {
         const { firstName, lastName, company, address1, address2, city, country, province, zip, phone } = await request.json();
-        const customerAddress = await customerAddressCreate({
+        const { customerAddress, customerUserErrors } = await customerAddressCreate({
           accessToken, address: {
             firstName, lastName, company, address1, address2, city, country, province, zip, phone
           }
         });
-        if (customerAddress) {
+        return json({ customerAddress, customerUserErrors });
+      }
+    case "update-address":
+      {
+        const { firstName, lastName, company, address1, address2, city, country, province, zip, phone, addressId } = await request.json();
+        const { customerAddress, customerUserErrors } = await customerAddressUpdate({
+          accessToken, address: {
+            firstName, lastName, company, address1, address2, city, country, province, zip, phone
+          }, addressId
+        });
+        return json({ customerAddress, customerUserErrors });
+      }
+    case "delete-address":
+      {
+        const { addressId } = await request.json();
+        const deletedCustomerAddressId = await customerAddressDelete({
+          accessToken, addressId
+        });
+        if (deletedCustomerAddressId) {
           status = "success";
         }
         else status = "error";
-        return json({ status, customerAddress });
+        return json({ status, deletedCustomerAddressId });
+      }
+    case "default-address-update":
+      {
+        const { addressId } = await request.json();
+        const customer = await customerDefaultAddressUpdate({
+          accessToken, addressId
+        });
+        if (customer) {
+          status = "success";
+          locals.customer = customer;
+        }
+        else status = "error";
+        return json({ status, customer });
       }
   }
 }

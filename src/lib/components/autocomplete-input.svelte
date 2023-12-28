@@ -6,6 +6,8 @@
 	export { className as class };
 	export let items: string[] = [];
 	export let value;
+	export let defaultValue = '';
+	export let searchMode: 'include' | 'start' = 'start';
 	export let name: string | null = null;
 	export let placeholder: string = '';
 
@@ -23,8 +25,14 @@
 		let storageArr: string[] = [];
 		if (inputValue) {
 			items.forEach((item) => {
-				if (item.toLowerCase().includes(inputValue.toLowerCase())) {
-					storageArr = [...storageArr, makeMatchBold(item)];
+				if (searchMode == 'include') {
+					if (item.toLowerCase().includes(inputValue.toLowerCase())) {
+						storageArr = [...storageArr, makeMatchBold(item)];
+					}
+				} else {
+					if (item.toLowerCase().startsWith(inputValue.toLowerCase())) {
+						storageArr = [...storageArr, makeMatchBold(item)];
+					}
 				}
 			});
 		}
@@ -44,9 +52,16 @@
 	};
 
 	const makeMatchBold = (str: string) => {
-		const regEx = new RegExp(inputValue, 'gi');
-		let boldedMatch = str.replace(regEx, '<strong>$&</strong>');
-		return boldedMatch;
+		if (searchMode == 'include') {
+			const regEx = new RegExp(inputValue, 'gi');
+			let boldedMatch = str.replace(regEx, '<strong>$&</strong>');
+			return boldedMatch;
+		} else {
+			let matched = str.substring(0, inputValue.length);
+			let makeBold = `<strong>${matched}</strong>`;
+			let boldedMatch = str.replace(matched, makeBold);
+			return boldedMatch;
+		}
 	};
 
 	const removeBold = (str: string) => {
@@ -56,6 +71,8 @@
 	let hiLiteIndex: number = -1;
 
 	$: value = filteredItems[hiLiteIndex] || inputValue;
+
+	$: inputValue = defaultValue;
 
 	const navigateList = (e: KeyboardEvent) => {
 		if (e.key === 'ArrowDown' && hiLiteIndex <= filteredItems.length - 1) {

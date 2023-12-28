@@ -1,16 +1,19 @@
+import { customerAddressFragment, customerFragment } from "../fragments/customer";
 
 export const getCustomerQuery = /* GraphQL */ `
   query getCustomer($accessToken: String!) {
     customer(customerAccessToken: $accessToken) {
-      id
-      firstName
-      lastName
-      displayName
-      email
-      phone
-      tags
-      acceptsMarketing
-      createdAt
+      ...customer
     }
   }
+  ${customerFragment}
+`;
+
+export const getCustomerAddressesQuery = /* GraphQL */ `
+  query getCustomer($accessToken: String!) {
+    customer(customerAccessToken: $accessToken) {
+      ...customer
+    }
+  }
+  ${customerAddressFragment}
 `;

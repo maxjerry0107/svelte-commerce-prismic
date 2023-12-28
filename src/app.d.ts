@@ -1,7 +1,9 @@
 
 // See https://kit.svelte.dev/docs/types#app
 
-import type { Customer } from "$lib/shopify/types";
+import type { Customer } from "$lib/shopify";
+
+
 
 // for information about these interfaces
 declare global {

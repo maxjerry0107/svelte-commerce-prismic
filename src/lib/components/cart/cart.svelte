@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { checkout } from '$lib/actions';
 	import { DEFAULT_OPTION } from '$lib/constants';
+	import type { CheckoutLineItem } from '$lib/shopify';
 	import type { Cart } from '$lib/shopify/types';
 	import { user } from '$lib/stores';
 	import { createUrl } from '$lib/utils';
@@ -8,7 +9,6 @@
 	import { createDialog } from 'svelte-headlessui';
 	import { Icon, ShoppingCart } from 'svelte-hero-icons';
 	import Transition from 'svelte-transition';
-	import type { CheckoutLineItem } from '../../../types/shopify';
 	import Close from '../close.svelte';
 	import LoadingDots from '../loading-dots.svelte';
 	import Price from '../price.svelte';

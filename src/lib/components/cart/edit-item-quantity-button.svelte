@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { updateCartItem } from '$lib/actions/cart';
+	import type { CheckoutLineItem } from '$lib/shopify';
 	import clsx from 'clsx';
 	import { createForm } from 'svelte-forms-lib';
 	import { Icon, Minus, Plus } from 'svelte-hero-icons';
-	import type { CheckoutLineItem } from '../../../types/shopify';
 	import LoadingDots from '../loading-dots.svelte';
 
 	export let item: CheckoutLineItem;

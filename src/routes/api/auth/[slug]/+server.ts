@@ -1,5 +1,6 @@
+
+import type { Customer } from '$lib/shopify';
 import { customerCreate, customerLogin, customerLogout, disassociateCustomerWithCheckout, getCustomer } from '$lib/shopify/index.js';
-import type { Customer } from '$lib/shopify/types.js';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request, cookies, params, locals }) {

@@ -1,3 +1,4 @@
+import { customerFragment } from "../fragments/customer";
 
 export const customerCreateMutation = /* GraphQL */ `
   mutation customerCreate($input: CustomerCreateInput!) {
@@ -8,16 +9,11 @@ export const customerCreateMutation = /* GraphQL */ `
         message
       }
       customer {
-        id
-        firstName
-        lastName
-        displayName
-        email
-        phone
-        acceptsMarketing
+        ...customer
       }
     }
   }
+  ${customerFragment}
 `;
 
 export const customerAccessTokenCreateMutation = /* GraphQL */ `
@@ -93,4 +89,60 @@ export const customerAddressCreateMutation = /* GraphQL */  `
       }
     }
   }
+`
+
+
+export const customerAddressUpdateMutation = /* GraphQL */  `
+  mutation customerAddressUpdate($address: MailingAddressInput!, $accessToken: String!, $addressId: ID!) {
+    customerAddressUpdate(address: $address, customerAccessToken: $accessToken, id: $addressId) {
+      customerAddress {
+        id
+        address1
+        address2
+        city
+        company
+        country
+        firstName
+        lastName
+        phone
+        province
+        zip
+      }
+      customerUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`
+
+export const customerAddressDeleteMutation = /* GraphQL */ `
+  mutation customerAddressDelete($accessToken: String!, $addressId: ID!) {
+    customerAddressDelete(customerAccessToken: $accessToken, id: $addressId) {
+      customerUserErrors {
+        code
+        field
+        message
+      }
+      deletedCustomerAddressId
+    }
+  }
+`
+
+
+export const customerDefaultAddressUpdateMutation = /* GraphQL */ `
+  mutation customerDefaultAddressUpdate($addressId: ID!, $accessToken: String!) {
+    customerDefaultAddressUpdate(addressId: $addressId, customerAccessToken: $accessToken) {
+      customer {
+        ...customer
+      }
+      customerUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+  ${customerFragment}
 `

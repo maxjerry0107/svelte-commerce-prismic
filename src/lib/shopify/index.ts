@@ -1,16 +1,16 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT } from '$lib/constants';
 import { isShopifyError } from '$lib/type-guards';
 import { ensureStartsWith } from '$lib/utils';
-import type { Checkout, MailingAddress, MailingAddressInput } from '../../types/shopify';
+import type { Checkout, Customer, CustomerAccessToken, CustomerAccessTokenCreateInput, CustomerAddressCreatePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerUpdateInput, MailingAddressInput } from '.';
 import { associateCustomerWithCheckoutMutation, checkoutCreateMutation, checkoutLineItemAddMutation, checkoutLineItemRemoveMutation, checkoutLineItemUpdateMutation, disassociateCustomerWithCheckoutMutation } from './mutations/checkout';
-import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerAddressCreateMutation, customerCreateMutation, customerUpdateMutation } from './mutations/customer';
+import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerAddressCreateMutation, customerAddressDeleteMutation, customerAddressUpdateMutation, customerCreateMutation, customerDefaultAddressUpdateMutation, customerUpdateMutation } from './mutations/customer';
 import { getCheckoutQuery } from './queries/checkout';
 import {
   getCollectionProductsQuery,
   getCollectionQuery,
   getCollectionsQuery
 } from './queries/collection';
-import { getCustomerQuery } from './queries/customer';
+import { getCustomerAddressesQuery, getCustomerQuery } from './queries/customer';
 import { getMenuQuery } from './queries/menu';
 import { getPageQuery, getPagesQuery } from './queries/page';
 import {
@@ -23,10 +23,7 @@ import type {
   Collection,
   CollectionWithProducts,
   Connection,
-  Customer,
-  CustomerAccessToken,
-  CustomerCreateInput,
-  CustomerLoginInput,
+  CustomerAddressData,
   Image,
   Menu,
   Page,
@@ -40,7 +37,10 @@ import type {
   ShopifyCollectionsOperation,
   ShopifyCreateCheckoutOperation,
   ShopifyCustomerAddressCreateOperation,
+  ShopifyCustomerAddressDeleteOperation,
+  ShopifyCustomerAddressUpdateOperation,
   ShopifyCustomerCreateOperation,
+  ShopifyCustomerDefaultAddressUpdateOperation,
   ShopifyCustomerLoginOperation,
   ShopifyCustomerLogoutOperation,
   ShopifyCustomerUpdateOperation,
@@ -392,7 +392,7 @@ export async function customerCreate({ firstName, lastName, email, password, acc
 }
 
 
-export async function customerUpdate({ accessToken, customer }: { accessToken: string, customer: CustomerCreateInput }): Promise<Customer> {
+export async function customerUpdate({ accessToken, customer }: { accessToken: string, customer: CustomerUpdateInput }): Promise<Customer> {
   const res = await shopifyFetch<ShopifyCustomerUpdateOperation>({
     query: customerUpdateMutation,
     variables: {
@@ -404,7 +404,7 @@ export async function customerUpdate({ accessToken, customer }: { accessToken: s
   return res.body.data.customerUpdate.customer;
 }
 
-export async function customerLogin({ email, password }: CustomerLoginInput): Promise<CustomerAccessToken> {
+export async function customerLogin({ email, password }: CustomerAccessTokenCreateInput): Promise<CustomerAccessToken> {
   const res = await shopifyFetch<ShopifyCustomerLoginOperation>({
     query: customerAccessTokenCreateMutation,
     variables: {
@@ -561,7 +561,7 @@ export async function disassociateCustomerWithCheckout({ checkoutId }: { checkou
 
 
 
-export async function customerAddressCreate({ accessToken, address }: { accessToken: string, address: MailingAddressInput }): Promise<MailingAddress> {
+export async function customerAddressCreate({ accessToken, address }: { accessToken: string, address: MailingAddressInput }): Promise<CustomerAddressCreatePayload> {
   const res = await shopifyFetch<ShopifyCustomerAddressCreateOperation>({
     query: customerAddressCreateMutation,
     variables: {
@@ -569,5 +569,59 @@ export async function customerAddressCreate({ accessToken, address }: { accessTo
     },
     cache: 'no-store'
   });
-  return res.body.data.customerAddressCreate.customerAddress;
+  return res.body.data.customerAddressCreate;
+}
+
+
+export async function customerAddressUpdate({ accessToken, address, addressId }: { accessToken: string, address: MailingAddressInput, addressId: string }): Promise<CustomerAddressUpdatePayload> {
+  const res = await shopifyFetch<ShopifyCustomerAddressUpdateOperation>({
+    query: customerAddressUpdateMutation,
+    variables: {
+      accessToken, address, addressId
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerAddressUpdate;
+}
+
+
+export async function customerAddressDelete({ accessToken, addressId }: { accessToken: string, addressId: string }): Promise<string> {
+  const res = await shopifyFetch<ShopifyCustomerAddressDeleteOperation>({
+    query: customerAddressDeleteMutation,
+    variables: {
+      accessToken, addressId
+    },
+    cache: 'no-store'
+  });
+  return res.body.data.customerAddressDelete.deletedCustomerAddressId;
+}
+
+
+export async function customerDefaultAddressUpdate({ accessToken, addressId }: { accessToken: string, addressId: string }): Promise<Customer> {
+  const res = await shopifyFetch<ShopifyCustomerDefaultAddressUpdateOperation>({
+    query: customerDefaultAddressUpdateMutation,
+    variables: {
+      accessToken, addressId
+    },
+    cache: 'no-store'
+  });
+  return {
+    ...res.body.data.customerDefaultAddressUpdate.customer,
+  };
+}
+
+
+export async function getCustomerAddressData({ accessToken }: { accessToken: string }): Promise<CustomerAddressData> {
+  const res = await shopifyFetch<ShopifyGetCustomerOperation>({
+    query: getCustomerAddressesQuery,
+    variables: {
+      accessToken
+    },
+    cache: 'no-store'
+  });
+
+  return {
+    defaultId: res.body.data.customer.defaultAddress?.id,
+    addresses: removeEdgesAndNodes(res.body.data.customer.addresses)
+  };
 }
