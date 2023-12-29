@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { checkout } from '$lib/actions';
 	import { DEFAULT_OPTION } from '$lib/constants';
 	import type { CheckoutLineItem } from '$lib/shopify';
@@ -53,7 +54,10 @@
 			window.location.href = cart?.checkoutUrl || '#';
 		}
 	});
+	$: if (browser) document.body.classList.toggle('overflow-hidden', $dialog.expanded);
 </script>
+
+<svelte:body class={'overflow-hidden'} />
 
 <button aria-label="Open cart" on:click={openCart}>
 	<OpenCart quantity={cart?.totalQuantity} />

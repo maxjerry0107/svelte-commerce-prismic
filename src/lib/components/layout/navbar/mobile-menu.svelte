@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { createDialog } from 'svelte-headlessui';
 	import { Bars3, Icon, XMark } from 'svelte-hero-icons';
@@ -12,6 +13,7 @@
 	$: if (innerWidth > 768) {
 		dialog.close();
 	}
+	$: if (browser) document.body.classList.toggle('overflow-hidden', $dialog.expanded);
 </script>
 
 <svelte:window bind:innerWidth />
