@@ -18,11 +18,13 @@
 	const { isSubmitting, handleSubmit } = createForm({
 		initialValues: {},
 		onSubmit: async () => {
-			const res = await customerAddressDelete({ addressId: item.id });
-			if (res.status == 'success') {
+			const { deletedCustomerAddressId, customerUserErrors } = await customerAddressDelete({
+				addressId: item.id
+			});
+			if (deletedCustomerAddressId) {
 				toast.success('Address deleted');
 				invalidate('customer:addresses');
-			} else toast.success('Address delete failed');
+			} else toast.error(customerUserErrors?.[0].message || 'Address delete failed');
 		}
 	});
 </script>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { signup } from '$lib/actions';
 	import LoadingDots from '$lib/components/loading-dots.svelte';
 	import clsx from 'clsx';
@@ -27,9 +28,16 @@
 		}),
 		onSubmit: async (values) => {
 			const { firstName, lastName, email, password } = values;
-			const res = await signup({ firstName, lastName, email, password });
-			if (res.status == 'success') toast.success('Sign up success!');
-			else toast.error('Sign up failed. Try again');
+			const { customerUserErrors, customer } = await signup({
+				firstName,
+				lastName,
+				email,
+				password
+			});
+			if (customer) {
+				toast.success('Sign up success!');
+				goto('/signin');
+			} else toast.error(customerUserErrors?.[0].message || 'Sign up failed. Try again');
 		}
 	});
 </script>

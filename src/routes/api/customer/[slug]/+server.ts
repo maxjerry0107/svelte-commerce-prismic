@@ -1,5 +1,4 @@
 
-import type { Customer } from '$lib/shopify';
 import { customerAddressCreate, customerAddressDelete, customerAddressUpdate, customerDefaultAddressUpdate, customerUpdate } from '$lib/shopify/index.js';
 import { json } from '@sveltejs/kit';
 
@@ -10,15 +9,16 @@ export async function POST({ request, cookies, params, locals }) {
   switch (slug) {
     case "update":
       {
-        let customer: Customer | null = null;
         const { firstName, lastName, email, phone, acceptsMarketing } = await request.json();
-        customer = await customerUpdate({ accessToken, customer: { firstName, lastName, email, phone, acceptsMarketing } });
+        const { customer, customerUserErrors, customerAccessToken } = await customerUpdate({ accessToken, customer: { firstName, lastName, email, phone, acceptsMarketing } });
         if (customer) {
-          status = "success";
           locals.customer = customer;
+          if (customerAccessToken)
+            cookies.set("accessToken", customerAccessToken?.accessToken, {
+              path: "/", maxAge: 60 * 60 * 24 * 7 // 1 week
+            })
         }
-        else status = "error";
-        return json({ status, customer });
+        return json({ customer, customerUserErrors });
       }
     case "create-address":
       {
@@ -43,14 +43,10 @@ export async function POST({ request, cookies, params, locals }) {
     case "delete-address":
       {
         const { addressId } = await request.json();
-        const deletedCustomerAddressId = await customerAddressDelete({
+        const { deletedCustomerAddressId, customerUserErrors } = await customerAddressDelete({
           accessToken, addressId
         });
-        if (deletedCustomerAddressId) {
-          status = "success";
-        }
-        else status = "error";
-        return json({ status, deletedCustomerAddressId });
+        return json({ deletedCustomerAddressId, customerUserErrors });
       }
     case "default-address-update":
       {

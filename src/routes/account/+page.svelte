@@ -27,9 +27,14 @@
 		onSubmit: async (values) => {
 			const { firstName, lastName, phone } = values;
 			const acceptsMarketing = $sw.checked;
-			const res = await customerUpdate({ firstName, lastName, phone, acceptsMarketing });
-			if (res.status == 'success') toast.success('Update success!');
-			else toast.error('Update failed. Try again');
+			const { customer, customerUserErrors } = await customerUpdate({
+				firstName,
+				lastName,
+				phone,
+				acceptsMarketing
+			});
+			if (customer) toast.success('Update success!');
+			else toast.error(customerUserErrors?.[0].message || 'Update failed. Try again');
 		}
 	});
 </script>

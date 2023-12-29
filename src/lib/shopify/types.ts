@@ -1,4 +1,4 @@
-import type { Checkout, CheckoutLineItem, Customer, CustomerAccessTokenCreateInput, CustomerAddressCreatePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerUpdateInput, MailingAddress, MailingAddressInput, MoneyV2 } from ".";
+import type { Checkout, CheckoutLineItem, Customer, CustomerAccessTokenCreateInput, CustomerAccessTokenCreatePayload, CustomerAccessTokenDeletePayload, CustomerAddressCreatePayload, CustomerAddressDeletePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerCreatePayload, CustomerUpdateInput, CustomerUpdatePayload, MailingAddress, MailingAddressInput, MoneyV2 } from ".";
 
 export type Maybe<T> = T | null;
 
@@ -202,9 +202,7 @@ export type VariantCombination = {
 
 export type ShopifyCustomerCreateOperation = {
   data: {
-    customerCreate: {
-      customer: Customer;
-    }
+    customerCreate: CustomerCreatePayload
   };
   variables: {
     input: CustomerCreateInput;
@@ -214,9 +212,7 @@ export type ShopifyCustomerCreateOperation = {
 
 export type ShopifyCustomerUpdateOperation = {
   data: {
-    customerUpdate: {
-      customer: Customer;
-    }
+    customerUpdate: CustomerUpdatePayload
   };
   variables: {
     customer: CustomerUpdateInput;
@@ -226,9 +222,7 @@ export type ShopifyCustomerUpdateOperation = {
 
 export type ShopifyCustomerLoginOperation = {
   data: {
-    customerAccessTokenCreate: {
-      customerAccessToken: CustomerAccessToken;
-    }
+    customerAccessTokenCreate: CustomerAccessTokenCreatePayload
   };
   variables: {
     input: CustomerAccessTokenCreateInput;
@@ -238,9 +232,7 @@ export type ShopifyCustomerLoginOperation = {
 
 export type ShopifyCustomerLogoutOperation = {
   data: {
-    customerAccessTokenDelete: {
-      deletedAccessToken: string;
-    }
+    customerAccessTokenDelete: CustomerAccessTokenDeletePayload
   };
   variables: {
     accessToken: string;
@@ -382,9 +374,7 @@ export type ShopifyCustomerAddressUpdateOperation = {
 
 export type ShopifyCustomerAddressDeleteOperation = {
   data: {
-    customerAddressDelete: {
-      deletedCustomerAddressId: string;
-    }
+    customerAddressDelete: CustomerAddressDeletePayload
   };
   variables: {
     accessToken: string,

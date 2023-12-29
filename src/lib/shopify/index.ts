@@ -1,7 +1,7 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT } from '$lib/constants';
 import { isShopifyError } from '$lib/type-guards';
 import { ensureStartsWith } from '$lib/utils';
-import type { Checkout, Customer, CustomerAccessToken, CustomerAccessTokenCreateInput, CustomerAddressCreatePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerUpdateInput, MailingAddressInput } from '.';
+import type { Checkout, Customer, CustomerAccessTokenCreateInput, CustomerAccessTokenCreatePayload, CustomerAccessTokenDeletePayload, CustomerAddressCreatePayload, CustomerAddressDeletePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerCreatePayload, CustomerUpdateInput, CustomerUpdatePayload, MailingAddressInput } from '.';
 import { associateCustomerWithCheckoutMutation, checkoutCreateMutation, checkoutLineItemAddMutation, checkoutLineItemRemoveMutation, checkoutLineItemUpdateMutation, disassociateCustomerWithCheckoutMutation } from './mutations/checkout';
 import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerAddressCreateMutation, customerAddressDeleteMutation, customerAddressUpdateMutation, customerCreateMutation, customerDefaultAddressUpdateMutation, customerUpdateMutation } from './mutations/customer';
 import { getCheckoutQuery } from './queries/checkout';
@@ -374,7 +374,7 @@ export async function getProducts({
   return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
 }
 
-export async function customerCreate({ firstName, lastName, email, password, acceptsMarketing }: CustomerCreateInput): Promise<Customer> {
+export async function customerCreate({ firstName, lastName, email, password, acceptsMarketing }: CustomerCreateInput): Promise<CustomerCreatePayload> {
   const res = await shopifyFetch<ShopifyCustomerCreateOperation>({
     query: customerCreateMutation,
     variables: {
@@ -388,11 +388,11 @@ export async function customerCreate({ firstName, lastName, email, password, acc
     },
     cache: 'no-store'
   });
-  return res.body.data.customerCreate.customer;
+  return res.body.data.customerCreate;
 }
 
 
-export async function customerUpdate({ accessToken, customer }: { accessToken: string, customer: CustomerUpdateInput }): Promise<Customer> {
+export async function customerUpdate({ accessToken, customer }: { accessToken: string, customer: CustomerUpdateInput }): Promise<CustomerUpdatePayload> {
   const res = await shopifyFetch<ShopifyCustomerUpdateOperation>({
     query: customerUpdateMutation,
     variables: {
@@ -401,10 +401,10 @@ export async function customerUpdate({ accessToken, customer }: { accessToken: s
     },
     cache: 'no-store'
   });
-  return res.body.data.customerUpdate.customer;
+  return res.body.data.customerUpdate;
 }
 
-export async function customerLogin({ email, password }: CustomerAccessTokenCreateInput): Promise<CustomerAccessToken> {
+export async function customerLogin({ email, password }: CustomerAccessTokenCreateInput): Promise<CustomerAccessTokenCreatePayload> {
   const res = await shopifyFetch<ShopifyCustomerLoginOperation>({
     query: customerAccessTokenCreateMutation,
     variables: {
@@ -415,10 +415,10 @@ export async function customerLogin({ email, password }: CustomerAccessTokenCrea
     },
     cache: 'no-store'
   });
-  return res.body.data.customerAccessTokenCreate.customerAccessToken;
+  return res.body.data.customerAccessTokenCreate;
 }
 
-export async function customerLogout({ accessToken }: { accessToken: string }): Promise<string> {
+export async function customerLogout({ accessToken }: { accessToken: string }): Promise<CustomerAccessTokenDeletePayload> {
   const res = await shopifyFetch<ShopifyCustomerLogoutOperation>({
     query: customerAccessTokenDeleteMutation,
     variables: {
@@ -426,7 +426,7 @@ export async function customerLogout({ accessToken }: { accessToken: string }): 
     },
     cache: 'no-store'
   });
-  return res.body.data.customerAccessTokenDelete.deletedAccessToken;
+  return res.body.data.customerAccessTokenDelete;
 }
 
 export async function getCustomer({ accessToken }: { accessToken: string }): Promise<Customer> {
@@ -585,7 +585,7 @@ export async function customerAddressUpdate({ accessToken, address, addressId }:
 }
 
 
-export async function customerAddressDelete({ accessToken, addressId }: { accessToken: string, addressId: string }): Promise<string> {
+export async function customerAddressDelete({ accessToken, addressId }: { accessToken: string, addressId: string }): Promise<CustomerAddressDeletePayload> {
   const res = await shopifyFetch<ShopifyCustomerAddressDeleteOperation>({
     query: customerAddressDeleteMutation,
     variables: {
@@ -593,7 +593,7 @@ export async function customerAddressDelete({ accessToken, addressId }: { access
     },
     cache: 'no-store'
   });
-  return res.body.data.customerAddressDelete.deletedCustomerAddressId;
+  return res.body.data.customerAddressDelete;
 }
 
 

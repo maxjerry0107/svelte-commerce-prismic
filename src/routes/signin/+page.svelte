@@ -20,22 +20,22 @@
 		}),
 		onSubmit: async (values) => {
 			const { email, password } = values;
-			const res = await login({ email, password });
-			if (res.status == 'success') {
+			const { customerUserErrors, customer } = await login({ email, password });
+			if (customer) {
 				const checkout_url = $page.url.searchParams.get('checkout_url');
 				if (checkout_url) {
 					const url = await checkout();
 					document.location.href = url;
 				} else goto('/account');
 				toast.success('Sign in success!');
-			} else toast.error('Sign in failed. Try again');
+			} else toast.error(customerUserErrors?.[0].message || 'Sign in failed. Try again');
 		}
 	});
 </script>
 
 <MetaTags title="Sign in" />
 
-<form method="post" on:submit={handleSubmit}>
+<form class="mt-10" method="post" on:submit={handleSubmit}>
 	<div
 		class="container mx-auto my-5 flex max-w-sm flex-1 flex-col items-center justify-center rounded-lg border border-neutral-200 bg-white px-2 py-5"
 	>

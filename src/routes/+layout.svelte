@@ -14,7 +14,9 @@
 	<ProgressBar class="text-gray-600" />
 	<div class="container">
 		<Navbar />
-		<slot />
+		<div class="min-h-[500px]">
+			<slot />
+		</div>
 		<Footer />
 		<Toaster />
 	</div>
