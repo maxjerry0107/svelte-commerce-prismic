@@ -1,4 +1,4 @@
-import type { Checkout, CheckoutLineItem, Customer, CustomerAccessTokenCreateInput, CustomerAccessTokenCreatePayload, CustomerAccessTokenDeletePayload, CustomerAddressCreatePayload, CustomerAddressDeletePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerCreatePayload, CustomerUpdateInput, CustomerUpdatePayload, MailingAddress, MailingAddressInput, MoneyV2 } from ".";
+import type { Checkout, CheckoutLineItem, Customer, CustomerAccessTokenCreateInput, CustomerAccessTokenCreatePayload, CustomerAccessTokenDeletePayload, CustomerAddressCreatePayload, CustomerAddressDeletePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerCreatePayload, CustomerUpdateInput, CustomerUpdatePayload, MailingAddress, MailingAddressInput, MoneyV2, OrderLineItem, Order as ShopifyOrder } from ".";
 
 export type Maybe<T> = T | null;
 
@@ -399,4 +399,9 @@ export type ShopifyCustomerDefaultAddressUpdateOperation = {
 export type CustomerAddressData = {
   defaultId?: string;
   addresses?: MailingAddress[]
+}
+
+
+export type Order = Omit<ShopifyOrder, "lineItems"> & {
+  lineItems?: OrderLineItem[]
 }

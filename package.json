@@ -43,6 +43,7 @@
 		"@prismicio/client": "^7.3.1",
 		"@prismicio/svelte": "^1.0.3",
 		"country-region-data": "^3.0.0",
+		"dayjs": "^1.11.10",
 		"multipassify": "^1.1.0",
 		"svelte-forms-lib": "^2.0.1",
 		"svelte-french-toast": "^1.2.0",

@@ -1,7 +1,7 @@
 import { HIDDEN_PRODUCT_TAG, SHOPIFY_GRAPHQL_API_ENDPOINT } from '$lib/constants';
 import { isShopifyError } from '$lib/type-guards';
 import { ensureStartsWith } from '$lib/utils';
-import type { Checkout, Customer, CustomerAccessTokenCreateInput, CustomerAccessTokenCreatePayload, CustomerAccessTokenDeletePayload, CustomerAddressCreatePayload, CustomerAddressDeletePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerCreatePayload, CustomerUpdateInput, CustomerUpdatePayload, MailingAddressInput } from '.';
+import type { Checkout, Customer, CustomerAccessTokenCreateInput, CustomerAccessTokenCreatePayload, CustomerAccessTokenDeletePayload, CustomerAddressCreatePayload, CustomerAddressDeletePayload, CustomerAddressUpdatePayload, CustomerCreateInput, CustomerCreatePayload, CustomerUpdateInput, CustomerUpdatePayload, MailingAddressInput, Order as ShopifyOrder } from '.';
 import { associateCustomerWithCheckoutMutation, checkoutCreateMutation, checkoutLineItemAddMutation, checkoutLineItemRemoveMutation, checkoutLineItemUpdateMutation, disassociateCustomerWithCheckoutMutation } from './mutations/checkout';
 import { customerAccessTokenCreateMutation, customerAccessTokenDeleteMutation, customerAddressCreateMutation, customerAddressDeleteMutation, customerAddressUpdateMutation, customerCreateMutation, customerDefaultAddressUpdateMutation, customerUpdateMutation } from './mutations/customer';
 import { getCheckoutQuery } from './queries/checkout';
@@ -10,7 +10,7 @@ import {
   getCollectionQuery,
   getCollectionsQuery
 } from './queries/collection';
-import { getCustomerAddressesQuery, getCustomerQuery } from './queries/customer';
+import { getCustomerAddressesQuery, getCustomerOrdersQuery, getCustomerQuery } from './queries/customer';
 import { getMenuQuery } from './queries/menu';
 import { getPageQuery, getPagesQuery } from './queries/page';
 import {
@@ -26,6 +26,7 @@ import type {
   CustomerAddressData,
   Image,
   Menu,
+  Order,
   Page,
   Product,
   ShopifyAddToCheckoutOperation,
@@ -611,7 +612,7 @@ export async function customerDefaultAddressUpdate({ accessToken, addressId }: {
 }
 
 
-export async function getCustomerAddressData({ accessToken }: { accessToken: string }): Promise<CustomerAddressData> {
+export async function getCustomerAddresses({ accessToken }: { accessToken: string }): Promise<CustomerAddressData> {
   const res = await shopifyFetch<ShopifyGetCustomerOperation>({
     query: getCustomerAddressesQuery,
     variables: {
@@ -624,4 +625,20 @@ export async function getCustomerAddressData({ accessToken }: { accessToken: str
     defaultId: res.body.data.customer.defaultAddress?.id,
     addresses: removeEdgesAndNodes(res.body.data.customer.addresses)
   };
+}
+
+export async function getCustomerOrders({ accessToken }: { accessToken: string }): Promise<Order[]> {
+  const res = await shopifyFetch<ShopifyGetCustomerOperation>({
+    query: getCustomerOrdersQuery,
+    variables: {
+      accessToken
+    },
+    cache: 'no-store'
+  });
+  const orders = removeEdgesAndNodes(res.body.data.customer.orders).map((item: ShopifyOrder) => {
+    return {
+      ...item, lineItems: removeEdgesAndNodes(item.lineItems)
+    }
+  })
+  return orders
 }

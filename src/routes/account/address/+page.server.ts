@@ -1,9 +1,9 @@
-import { getCustomerAddressData } from '$lib/shopify/index.js';
+import { getCustomerAddresses } from '$lib/shopify/index.js';
 
 export const load = async ({ cookies, depends }) => {
   depends('customer:addresses');
   const accessToken = cookies.get('accessToken') || "";
-  const addressData = await getCustomerAddressData({ accessToken })
+  const addressData = await getCustomerAddresses({ accessToken })
   return {
     addressData
   }
