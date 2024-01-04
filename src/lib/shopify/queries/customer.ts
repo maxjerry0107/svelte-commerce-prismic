@@ -41,23 +41,39 @@ export const getCustomerOrdersQuery = /* GraphQL */ `
               currencyCode
             }
             billingAddress {
+              address1
+              address2
+              city
+              company
+              country
+              countryCodeV2
+              formattedArea
               firstName
               lastName
+              latitude
+              longitude
+              name
               phone
-              address1
-              city
               province
-              country
+              provinceCode
               zip
             }
             shippingAddress {
+              address1
+              address2
+              city
+              company
+              country
+              countryCodeV2
+              formattedArea
               firstName
               lastName
+              latitude
+              longitude
+              name
               phone
-              address1
-              city
               province
-              country
+              provinceCode
               zip
             }
             lineItems(first: 10) {
@@ -72,6 +88,7 @@ export const getCustomerOrdersQuery = /* GraphQL */ `
                   variant {
                     id
                     sku
+                    title
                     product {
                       handle
                       vendor
@@ -87,7 +104,7 @@ export const getCustomerOrdersQuery = /* GraphQL */ `
                     image {
                       altText
                       originalSrc
-                      transformedSrc(maxWidth: 700)
+                      transformedSrc(maxWidth: 80)
                       url
                     }
                   }
