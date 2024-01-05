@@ -23,11 +23,11 @@
 								src={item.variant?.image?.transformedSrc}
 								alt={item.variant?.image?.altText || item.title}
 							/>
-							<div class="flex flex-col gap-1">
+							<div class="flex flex-1 flex-col gap-1">
 								<p>
 									{item.title}
 								</p>
-								{#if item.variant?.title}
+								{#if item.variant?.title !== 'Default Title'}
 									<small class="font-bold">{item.variant?.title}</small>
 								{/if}
 							</div>
@@ -41,6 +41,17 @@
 						</div>
 					{/each}
 				{/if}
+			</div>
+			<div class="flex flex-row items-end">
+				<div class="flex-1"></div>
+				<div>
+					<p>
+						Total: <span class="font-bold">
+							{selectedOrder.totalPrice.currencyCode}
+							{selectedOrder.totalPrice.amount}
+						</span>
+					</p>
+				</div>
 			</div>
 		</div>
 		<div class="flex w-1/3 flex-col gap-y-4 px-6 text-sm">

@@ -9,6 +9,12 @@ export async function POST({ request, cookies, params, locals }) {
   let cart = null;
   if (checkoutId) {
     cart = await getCheckout(checkoutId);
+    if (cart?.completed) {
+      cart = null;
+      cookies.delete("checkoutId", {
+        path: "/"
+      })
+    }
   }
   switch (slug) {
     case "get":
@@ -68,7 +74,7 @@ export async function POST({ request, cookies, params, locals }) {
       if (accessToken) {
         cart = await associateCustomerWithCheckout({ checkoutId, accessToken })
         const customer = {
-          email: locals.customer.email,
+          email: locals.customer?.email,
           return_to: cart.checkoutUrl,
         };
         const url = new Multipassify(import.meta.env.VITE_SHOPIFY_STORE_MULTIPASS_TOKEN).generateUrl(

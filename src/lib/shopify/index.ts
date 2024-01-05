@@ -442,10 +442,6 @@ export async function getCustomer({ accessToken }: { accessToken: string }): Pro
 }
 
 
-
-
-
-
 const normalizeCheckoutToCart = (checkout: Checkout): Cart => {
   const lineItems = removeEdgesAndNodes(checkout.lineItems);
   const totalQuantity = lineItems
@@ -461,6 +457,7 @@ const normalizeCheckoutToCart = (checkout: Checkout): Cart => {
     },
     totalQuantity: totalQuantity,
     lines: lineItems,
+    completed: checkout.orderStatusUrl === null ? false : true,
     checkoutUrl: checkout.webUrl
   }
 }

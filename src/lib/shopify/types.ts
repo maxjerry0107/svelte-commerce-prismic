@@ -346,6 +346,7 @@ export type Cart = {
   lines: CheckoutLineItem[];
   totalQuantity: number;
   checkoutUrl: string;
+  completed: boolean;
 };
 
 

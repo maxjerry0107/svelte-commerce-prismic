@@ -21,6 +21,7 @@ export const checkoutFragment = /* GraphQL */ `
     completedAt
     createdAt
     taxesIncluded
+    orderStatusUrl
     lineItems(first: 250) {
       pageInfo {
         hasNextPage
